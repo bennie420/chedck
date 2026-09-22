@@ -1,0 +1,66 @@
+# chedck — check printing system .gitignore
+
+# Databases (contain live check data — never commit)
+db/
+*.db
+*.db-shm
+*.db-wal
+
+# Vault (encrypted signature — never commit to VCS)
+vault/
+
+# PDF output
+output/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
+*.log
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# macOS
+.DS_Store
+
+# Frontend
+node_modules/
+ui/node_modules/
+ui/dist/
+
+# Scratch & test outputs
+scratch/
+test_*.pdf
+test_*.png
+*preview.png
+*reference*.png
+*reference*.jpg
+logo_measured.png
+current_header_crop.png
+

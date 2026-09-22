@@ -1,0 +1,22 @@
+{
+  "_comment": "Drawer account configuration. Fill in your actual values. routing_number is validated with mod-10 at startup. See buildspec.md §6 for face layout requirements.",
+
+  "drawer_name":    "OmniLeadFeeder LLC",
+  "drawer_address": "123 Main Street",
+  "drawer_city_state_zip": "Phoenix, AZ 85001",
+
+  "account_id":     "primary",
+  "account_number": "000000000",
+  "_comment_acct":  "Replace 000000000 with your real account number. Right-justified in the On-Us field; no zero-fill for unused positions.",
+
+  "routing_number": "000000000",
+  "_comment_rt":    "Replace with your 9-digit ABA routing number. Validated with mod-10 check digit on startup.",
+
+  "fractional_routing": "00-0000/000",
+  "_comment_frac":  "Format: prefix-suffix/FRB. Displayed upper-right on the check face. Example: 70-2322/719",
+
+  "check_dimensions": {
+    "width_in":  8.5,
+    "height_in": 3.5
+  }
+}

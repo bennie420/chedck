@@ -1,0 +1,24 @@
+services:
+  chedck:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chedck-app
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - PRODUCTION_LOCK=${PRODUCTION_LOCK:-TEST}
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./db:/app/db
+      - ./output:/app/output
+      - ./config:/app/config
+      - ./fonts:/app/fonts
+      - ./vault:/app/vault
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

@@ -1,0 +1,26 @@
+# Version control and IDE
+.git
+.gitignore
+.gemini
+.vscode
+.idea
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node dependencies and build caches
+ui/node_modules/
+ui/dist/
+
+# Scratch and test files
+scratch/
+output/*.pdf
+output/*.png
+*.pdf
+*.png

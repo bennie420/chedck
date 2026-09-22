@@ -1,0 +1,29 @@
+# Koyeb App Specification for Free Tier Deployment
+name: chedck
+services:
+  - name: chedck-service
+    type: web
+    instance_type: nano
+    regions:
+      - was
+    docker:
+      dockerfile: Dockerfile
+    ports:
+      - port: 8000
+        protocol: http
+    routes:
+      - path: /
+        port: 8000
+    health_checks:
+      - protocol: http
+        path: /api/health
+        port: 8000
+        interval: 30
+        timeout: 5
+        unhealthy_threshold: 3
+        healthy_threshold: 1
+    env:
+      - key: PRODUCTION_LOCK
+        value: TEST
+      - key: PYTHONUNBUFFERED
+        value: "1"
