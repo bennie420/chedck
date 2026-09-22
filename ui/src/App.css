@@ -670,3 +670,31 @@
   background: #6366f1;
 }
 
+/* ----------------------------------------------------------------
+   Settings Modal
+---------------------------------------------------------------- */
+.settings-dialog {
+  max-width: 620px;
+}
+
+.settings-section-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  padding-bottom: 0.35rem;
+  margin-bottom: 0.25rem;
+}
+
+.settings-field-row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+@media (max-width: 520px) {
+  .settings-field-row {
+    flex-direction: column;
+  }
+}

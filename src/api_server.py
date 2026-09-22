@@ -178,6 +178,56 @@ def get_remittance_template():
     return load_config("remittance_template.json")
 
 
+class AccountConfigUpdate(BaseModel):
+    drawer_name: str
+    drawer_address: str
+    drawer_city_state_zip: str
+    account_number: str
+    routing_number: str
+    fractional_routing: str
+
+
+@app.post("/api/config/account")
+def update_account_config(req: AccountConfigUpdate):
+    """Save updated account and routing number to config/account_config.json."""
+    import validation as v
+
+    # Validate routing number
+    try:
+        v.validate_routing_number(req.routing_number)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=f"Routing number invalid: {e}")
+
+    # Validate account number (pass bank_config for max-width from bank spec)
+    bank_cfg_for_validation = load_config("bank_config.json")
+    try:
+        v.validate_account_number(req.account_number, bank_cfg_for_validation)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=f"Account number invalid: {e}")
+
+    # Load existing config to preserve non-editable fields
+    cfg_path = CONFIG_DIR / "account_config.json"
+    existing = json.loads(cfg_path.read_text()) if cfg_path.exists() else {}
+
+    existing.update({
+        "drawer_name": req.drawer_name,
+        "drawer_address": req.drawer_address,
+        "drawer_city_state_zip": req.drawer_city_state_zip,
+        "account_number": req.account_number,
+        "routing_number": req.routing_number,
+        "fractional_routing": req.fractional_routing,
+    })
+
+    cfg_path.write_text(json.dumps(existing, indent=2))
+
+    return {
+        "success": True,
+        "message": "Account configuration updated successfully.",
+        "routing_number": req.routing_number,
+        "account_number": req.account_number,
+    }
+
+
 @app.get("/api/checks")
 def get_checks(limit: int = 50):
     """Fetch issued check records from SQLite database."""

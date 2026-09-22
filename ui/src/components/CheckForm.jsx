@@ -326,6 +326,20 @@ export default function CheckForm({
           </div>
         </div>
 
+        {/* Non-Liability Pre-issuance Notice */}
+        <div className="form-disclaimer-notice" style={{
+          background: 'rgba(239, 68, 68, 0.08)',
+          border: '1px solid rgba(239, 68, 68, 0.25)',
+          borderRadius: 'var(--radius-sm)',
+          padding: '0.6rem 0.85rem',
+          fontSize: '0.74rem',
+          lineHeight: '1.4',
+          color: '#fca5a5',
+          marginBottom: '1rem'
+        }}>
+          <strong>⚠️ Developer Non-Liability Notice:</strong> This software is provided &quot;AS IS&quot;. The software developer disclaims all legal and financial liability for check printing, bank clearance, or negotiation. Operator assumes 100% legal responsibility under UCC Articles 3 &amp; 4.
+        </div>
+
         {/* Submit Print Button */}
         <button
           type="button"

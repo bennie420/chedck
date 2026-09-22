@@ -5,6 +5,8 @@ import CheckForm from './components/CheckForm';
 import CheckPreview from './components/CheckPreview';
 import LedgerTable from './components/LedgerTable';
 import VoidModal from './components/VoidModal';
+import DisclaimerModal from './components/DisclaimerModal';
+import SettingsModal from './components/SettingsModal';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('studio');
@@ -40,6 +42,12 @@ export default function App() {
   // Void modal state
   const [voidCheckTarget, setVoidCheckTarget] = useState(null);
   const [isVoiding, setIsVoiding] = useState(false);
+
+  // Legal Disclaimer modal state
+  const [isDisclaimerOpen, setIsDisclaimerOpen] = useState(false);
+
+  // Settings modal state
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const fetchNextSerial = useCallback(() => {
     fetch('/api/checks/next-serial')
@@ -178,7 +186,26 @@ export default function App() {
         setActiveTab={setActiveTab}
         accountInfo={accountInfo}
         onRefresh={loadChecks}
+        onOpenDisclaimer={() => setIsDisclaimerOpen(true)}
+        onOpenSettings={() => setIsSettingsOpen(true)}
       />
+
+      {/* Persistent Legal Non-Liability Banner Strip */}
+      <div className="legal-banner-strip">
+        <div className="legal-banner-inner">
+          <span className="legal-banner-icon">⚖️</span>
+          <span className="legal-banner-text">
+            <strong>DEVELOPER NON-LIABILITY DISCLAIMER:</strong> This software is provided strictly &quot;AS IS&quot; for technical evaluation. The developer assumes zero legal or financial liability for check issuance, bank negotiation, or losses. Operator assumes 100% legal responsibility under UCC Articles 3 &amp; 4.
+          </span>
+          <button
+            type="button"
+            className="legal-banner-btn"
+            onClick={() => setIsDisclaimerOpen(true)}
+          >
+            Terms of Use
+          </button>
+        </div>
+      </div>
 
       <main className="app-content">
         {activeTab === 'studio' ? (
@@ -209,6 +236,29 @@ export default function App() {
         )}
       </main>
 
+      {/* Comprehensive Legal Non-Liability Footer */}
+      <footer className="app-footer-disclaimer">
+        <div className="footer-disclaimer-inner">
+          <div className="footer-disclaimer-title">
+            <span>⚖️</span>
+            <strong>LEGAL DISCLAIMER &amp; COMPLETE DEVELOPER LIABILITY WAIVER</strong>
+          </div>
+          <p className="footer-disclaimer-text">
+            THIS SOFTWARE IS PROVIDED &quot;AS IS&quot; AND WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. UNDER NO CIRCUMSTANCES SHALL THE DEVELOPER, AUTHORS, OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, PUNITIVE, OR CONSEQUENTIAL DAMAGES (INCLUDING BUT NOT LIMITED TO LOSS OF FUNDS, BANK FEES, RETURN CHECK CHARGES, REJECTIONS, OR LEGAL DISPUTES) ARISING FROM OR IN CONNECTION WITH THIS SOFTWARE OR ANY CHECKS GENERATED, PRINTED, OR NEGOTIATED HEREWITH. OPERATORS BEAR EXCLUSIVE RESPONSIBILITY FOR COMPLIANCE WITH APPLICABLE BANKING LAWS AND WRITTEN DEPOSIT AGREEMENTS.
+          </p>
+          <div className="footer-disclaimer-meta">
+            <span>ANSI X9.100 Check Engine · Built for Technical Evaluation</span>
+            <button
+              type="button"
+              className="footer-link-btn"
+              onClick={() => setIsDisclaimerOpen(true)}
+            >
+              View Complete Disclaimer &amp; Terms
+            </button>
+          </div>
+        </div>
+      </footer>
+
       {/* Void Confirmation Modal */}
       {voidCheckTarget && (
         <VoidModal
@@ -216,6 +266,23 @@ export default function App() {
           onClose={() => setVoidCheckTarget(null)}
           onConfirmVoid={handleConfirmVoid}
           isVoiding={isVoiding}
+        />
+      )}
+
+      {/* Developer Liability Disclaimer Modal */}
+      {isDisclaimerOpen && (
+        <DisclaimerModal onClose={() => setIsDisclaimerOpen(false)} />
+      )}
+
+      {/* Account & Routing Settings Modal */}
+      {isSettingsOpen && (
+        <SettingsModal
+          accountInfo={accountInfo}
+          onClose={() => setIsSettingsOpen(false)}
+          onSaved={() => {
+            // Reload account info after save
+            fetch('/api/accounts').then(r => r.json()).then(setAccountInfo);
+          }}
         />
       )}
     </div>

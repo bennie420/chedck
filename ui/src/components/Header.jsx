@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Header({ activeTab, setActiveTab, accountInfo, onRefresh }) {
+export default function Header({ activeTab, setActiveTab, accountInfo, onRefresh, onOpenDisclaimer, onOpenSettings }) {
   const isLive = accountInfo?.production_lock === 'LIVE';
 
   return (
@@ -54,6 +54,49 @@ export default function Header({ activeTab, setActiveTab, accountInfo, onRefresh
       </nav>
 
       <div className="header-status">
+        <button
+          className="btn-disclaimer-header"
+          onClick={onOpenDisclaimer}
+          title="View Developer Liability Disclaimer"
+          style={{
+            background: 'rgba(239, 68, 68, 0.12)',
+            border: '1px solid rgba(239, 68, 68, 0.3)',
+            color: '#fca5a5',
+            padding: '4px 10px',
+            borderRadius: '6px',
+            fontSize: '0.75rem',
+            fontWeight: '600',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          <span>⚖️</span>
+          <span>Disclaimer</span>
+        </button>
+
+        <button
+          onClick={onOpenSettings}
+          title="Account & Routing Settings"
+          style={{
+            background: 'rgba(99, 102, 241, 0.12)',
+            border: '1px solid rgba(99, 102, 241, 0.3)',
+            color: '#a5b4fc',
+            padding: '4px 10px',
+            borderRadius: '6px',
+            fontSize: '0.75rem',
+            fontWeight: '600',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          <span>⚙️</span>
+          <span>Account &amp; Routing</span>
+        </button>
+
         <div className={`status-badge ${isLive ? 'live' : 'test'}`}>
           <span className="status-dot"></span>
           {isLive ? 'LIVE MODE' : 'TEST MODE (PDF Only)'}
