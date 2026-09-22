@@ -1,0 +1,17 @@
+# Render.com Blueprint Specification for Free Web Service
+services:
+  - type: web
+    name: chedck
+    runtime: docker
+    plan: free
+    region: oregon
+    branch: main
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: PRODUCTION_LOCK
+        value: TEST
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: PORT
+        value: "8000"
