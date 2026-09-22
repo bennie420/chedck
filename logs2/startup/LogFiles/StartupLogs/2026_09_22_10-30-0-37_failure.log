@@ -1,0 +1,410 @@
+========== New Cold Start Attempt (2026-09-22T02:14:32.7060177+00:00) ==========
+2026-09-22T02:14:32.7060177+00:00 ContainerStream: INFO:     169.254.129.1:50093 - "GET / HTTP/1.1" 200 OK
+2026-09-22T02:14:32.7209513+00:00 ContainerStream: INFO:     169.254.129.1:50093 - "GET / HTTP/1.1" 200 OK
+2026-09-22T02:14:51.6314749+00:00 ContainerStream: INFO:     169.254.129.1:59351 - "GET /api/health HTTP/1.1" 200 OK
+2026-09-22T02:14:51.9514215+00:00 ContainerStream: INFO:     169.254.129.1:59351 - "GET / HTTP/1.1" 200 OK
+2026-09-22T02:15:12.9918623+00:00 ContainerStream: INFO:     169.254.129.1:12463 - "GET /api/health HTTP/1.1" 200 OK
+2026-09-22T02:15:13.4012639+00:00 ContainerStream: INFO:     169.254.129.1:12463 - "GET /api/accounts HTTP/1.1" 200 OK
+2026-09-22T02:15:35.0534156+00:00 ContainerStream: INFO:     169.254.129.1:58837 - "GET / HTTP/1.1" 200 OK
+2026-09-22T02:15:35.1513311+00:00 ContainerStream: INFO:     169.254.129.1:58837 - "GET /assets/index-BF5GFrrh.js HTTP/1.1" 200 OK
+2026-09-22T02:15:35.1539626+00:00 ContainerStream: INFO:     169.254.129.1:58853 - "GET /assets/index-THZ0qn47.css HTTP/1.1" 200 OK
+2026-09-22T02:15:35.8054597+00:00 ContainerStream: INFO:     169.254.129.1:58837 - "GET /fonts/e13b.ttf HTTP/1.1" 200 OK
+2026-09-22T02:15:35.8068519+00:00 ContainerStream: INFO:     169.254.129.1:58853 - "GET /api/accounts HTTP/1.1" 200 OK
+2026-09-22T02:15:35.8977165+00:00 ContainerStream: INFO:     169.254.129.1:58837 - "GET /api/templates/remittance HTTP/1.1" 200 OK
+2026-09-22T02:15:35.9872232+00:00 ContainerStream: INFO:     169.254.129.1:58837 - "GET /api/checks HTTP/1.1" 500 Internal Server Error
+2026-09-22T02:15:36.0292470+00:00 ContainerStream: ERROR:    Exception in ASGI application
+2026-09-22T02:15:36.0292807+00:00 ContainerStream: Traceback (most recent call last):
+2026-09-22T02:15:36.0292877+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/uvicorn/protocols/http/httptools_impl.py", line 422, in run_asgi
+2026-09-22T02:15:36.0292902+00:00 ContainerStream:     result = await app(  # type: ignore[func-returns-value]
+2026-09-22T02:15:36.0292927+00:00 ContainerStream:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-09-22T02:15:36.0292955+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/uvicorn/middleware/proxy_headers.py", line 63, in __call__
+2026-09-22T02:15:36.0292981+00:00 ContainerStream:     return await self.app(scope, receive, send)
+2026-09-22T02:15:36.0293003+00:00 ContainerStream:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-09-22T02:15:36.0293029+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/fastapi/applications.py", line 1163, in __call__
+2026-09-22T02:15:36.0293058+00:00 ContainerStream:     await super().__call__(scope, receive, send)
+2026-09-22T02:15:36.0293087+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/starlette/applications.py", line 96, in __call__
+2026-09-22T02:15:36.0293120+00:00 ContainerStream:     await self.middleware_stack(scope, receive, send)
+2026-09-22T02:15:36.0293901+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/starlette/middleware/errors.py", line 186, in __call__
+2026-09-22T02:15:36.0293951+00:00 ContainerStream:     raise exc
+2026-09-22T02:15:36.0293977+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/starlette/middleware/errors.py", line 164, in __call__
+2026-09-22T02:15:36.0293998+00:00 ContainerStream:     await self.app(scope, receive, _send)
+2026-09-22T02:15:36.0294024+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/starlette/middleware/cors.py", line 88, in __call__
+2026-09-22T02:15:36.0294187+00:00 ContainerStream:     await self.app(scope, receive, send)
+2026-09-22T02:15:36.0294214+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+2026-09-22T02:15:36.0294238+00:00 ContainerStream:     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+2026-09-22T02:15:36.0294263+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+2026-09-22T02:15:36.0294285+00:00 ContainerStream:     raise exc
+2026-09-22T02:15:36.0294309+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+2026-09-22T02:15:36.0294332+00:00 ContainerStream:     await app(scope, receive, sender)
+2026-09-22T02:15:36.0294376+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+2026-09-22T02:15:36.0294401+00:00 ContainerStream:     await self.app(scope, receive, send)
+2026-09-22T02:15:36.0294425+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/starlette/routing.py", line 670, in __call__
+2026-09-22T02:15:36.0294447+00:00 ContainerStream:     await self.middleware_stack(scope, receive, send)
+2026-09-22T02:15:36.0294472+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/fastapi/routing.py", line 2734, in app
+2026-09-22T02:15:36.0294495+00:00 ContainerStream:     await route.handle(scope, receive, send)
+2026-09-22T02:15:36.0294519+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/fastapi/routing.py", line 1281, in handle
+2026-09-22T02:15:36.0294543+00:00 ContainerStream:     await super().handle(scope, receive, send)
+2026-09-22T02:15:36.0294568+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/starlette/routing.py", line 280, in handle
+2026-09-22T02:15:36.0294635+00:00 ContainerStream:     await self.app(scope, receive, send)
+2026-09-22T02:15:36.0294671+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/fastapi/routing.py", line 158, in app
+2026-09-22T02:15:36.0294697+00:00 ContainerStream:     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+2026-09-22T02:15:36.0294721+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+2026-09-22T02:15:36.0294742+00:00 ContainerStream:     raise exc
+2026-09-22T02:15:36.0294766+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+2026-09-22T02:15:36.0294788+00:00 ContainerStream:     await app(scope, receive, sender)
+2026-09-22T02:15:36.0294811+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/fastapi/routing.py", line 144, in app
+2026-09-22T02:15:36.0294833+00:00 ContainerStream:     response = await f(request)
+2026-09-22T02:15:36.0294854+00:00 ContainerStream:                ^^^^^^^^^^^^^^^^
+2026-09-22T02:15:36.0294878+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/fastapi/routing.py", line 706, in app
+2026-09-22T02:15:36.0294901+00:00 ContainerStream:     raw_response = await run_endpoint_function(
+2026-09-22T02:15:36.0294922+00:00 ContainerStream:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-09-22T02:15:36.0294957+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/fastapi/routing.py", line 354, in run_endpoint_function
+2026-09-22T02:15:36.0294981+00:00 ContainerStream:     return await run_in_threadpool(dependant.call, **values)
+2026-09-22T02:15:36.0295004+00:00 ContainerStream:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-09-22T02:15:36.0295029+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/starlette/concurrency.py", line 34, in run_in_threadpool
+2026-09-22T02:15:36.0295052+00:00 ContainerStream:     return await anyio.to_thread.run_sync(func)
+2026-09-22T02:15:36.0295075+00:00 ContainerStream:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-09-22T02:15:36.0295101+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/anyio/to_thread.py", line 65, in run_sync
+2026-09-22T02:15:36.0295123+00:00 ContainerStream:     return await get_async_backend().run_sync_in_worker_thread(
+2026-09-22T02:15:36.0295375+00:00 ContainerStream:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-09-22T02:15:36.0295421+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2706, in run_sync_in_worker_thread
+2026-09-22T02:15:36.0295449+00:00 ContainerStream:     return await future
+2026-09-22T02:15:36.0298421+00:00 ContainerStream:            ^^^^^^^^^^^^
+2026-09-22T02:15:36.0298492+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 1100, in run
+2026-09-22T02:15:36.0298521+00:00 ContainerStream:     result = context.run(func, *args)
+2026-09-22T02:15:36.0298550+00:00 ContainerStream:              ^^^^^^^^^^^^^^^^^^^^^^^^
+2026-09-22T02:15:36.0298581+00:00 ContainerStream:   File "/tmp/8df184f0bdffeb6/src/api_server.py", line 190, in get_checks
+2026-09-22T02:15:36.0298608+00:00 ContainerStream:     cur.execute(
+2026-09-22T02:15:36.0300301+00:00 ContainerStream: sqlite3.OperationalError: no such table: checks
+2026-09-22T02:15:36.0607099+00:00 ContainerStream: INFO:     169.254.129.1:58869 - "GET /favicon.svg HTTP/1.1" 200 OK
+2026-09-22T02:15:36.1018698+00:00 ContainerStream: INFO:     169.254.129.1:58853 - "GET /api/checks/next-serial HTTP/1.1" 200 OK
+2026-09-22T02:15:36.5393391+00:00 ContainerStream: INFO:     169.254.129.1:58853 - "POST /api/checks/preview HTTP/1.1" 200 OK
+2026-09-22T02:24:21.5265242+00:00 ContainerStatus: State: Starting, Action: EstablishingSiteNetworks, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-09-22T02:24:22.6098247+00:00 ContainerStatus: State: Starting, Action: StartingSiteContainers, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-09-22T02:24:22.6099273+00:00 ContainerStatus: Container start method called.
+2026-09-22T02:24:22.6099721+00:00 ContainerStatus: State: Starting, Action: PullingImage, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Pulling image 10.1.0.6:13209/appsvc/python:3.12_20260910.3.tuxprod for chedck-studio., DetailsLevel: INFO
+2026-09-22T02:24:22.6100311+00:00 ContainerStatus: Establishing network.
+2026-09-22T02:24:22.6101332+00:00 ContainerStatus: Pulling image: appsvc/python:3.12_20260910.3.tuxprod.
+2026-09-22T02:24:22.8185948+00:00 ContainerStatus: Image appsvc/python:3.12_20260910.3.tuxprod is pulled from registry 10.1.0.6:13209
+2026-09-22T02:24:22.8193347+00:00 ContainerStatus: Container is starting.
+2026-09-22T02:24:22.8194060+00:00 ContainerStatus: State: Starting, Action: MountingVolumes, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Mounting volumes for chedck-studio., DetailsLevel: INFO
+2026-09-22T02:24:22.8194498+00:00 ContainerStatus: Establishing user namespace if not established already.
+2026-09-22T02:24:22.8195023+00:00 ContainerStatus: Establishing network if not established already.
+2026-09-22T02:24:22.8195552+00:00 ContainerStatus: Mounting volumes.
+2026-09-22T02:24:22.8197085+00:00 ContainerStatus: Nested mountpoint 
+2026-09-22T02:24:22.8278423+00:00 ContainerStatus: Nested mountpoint volatile/logs
+2026-09-22T02:24:22.8410663+00:00 ContainerStatus: Nested mountpoint 
+2026-09-22T02:24:22.8445890+00:00 ContainerStatus: Nested mountpoint 
+2026-09-22T02:24:22.8468501+00:00 ContainerStatus: Nested mountpoint 
+2026-09-22T02:24:22.8491015+00:00 ContainerStatus: Nested mountpoint 
+2026-09-22T02:24:22.9877500+00:00 ContainerStatus: State: Starting, Action: CreatingContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Finished pulling container image and mounting volumes for chedck-studio. Allocatinng the rest of the container resources to finish container creation., DetailsLevel: INFO
+2026-09-22T02:24:22.9878288+00:00 ContainerStatus: Creating container.
+2026-09-22T02:24:22.9880681+00:00 ContainerStatus: Creating pipes for streaming container io.
+2026-09-22T02:24:22.9881633+00:00 ContainerStatus: Creating stdout named pipe at /podr/container/pipe/7fed7a29b6ae_chedck-studio/stdout_c9526524a0af4078ad95e1d67131488b.
+2026-09-22T02:24:22.9895404+00:00 ContainerStatus: Successfully created stdout named pipe at: /podr/container/pipe/7fed7a29b6ae_chedck-studio/stdout_c9526524a0af4078ad95e1d67131488b.
+2026-09-22T02:24:22.9899499+00:00 ContainerStatus: Opening named pipe /podr/container/pipe/7fed7a29b6ae_chedck-studio/stdout_c9526524a0af4078ad95e1d67131488b for reading in non-blocking mode.
+2026-09-22T02:24:22.9900604+00:00 ContainerStatus: Successfully opened named pipe: /podr/container/pipe/7fed7a29b6ae_chedck-studio/stdout_c9526524a0af4078ad95e1d67131488b.
+2026-09-22T02:24:22.9901398+00:00 ContainerStatus: Successfully removed non-blocking flag from /podr/container/pipe/7fed7a29b6ae_chedck-studio/stdout_c9526524a0af4078ad95e1d67131488b.
+2026-09-22T02:24:22.9905349+00:00 ContainerStatus: Creating stderr named pipe at /podr/container/pipe/7fed7a29b6ae_chedck-studio/stderr_557a348344e7446ebf18a82d061dbe5c.
+2026-09-22T02:24:22.9906658+00:00 ContainerStatus: Successfully created stderr named pipe at: /podr/container/pipe/7fed7a29b6ae_chedck-studio/stderr_557a348344e7446ebf18a82d061dbe5c.
+2026-09-22T02:24:22.9907414+00:00 ContainerStatus: Opening named pipe /podr/container/pipe/7fed7a29b6ae_chedck-studio/stderr_557a348344e7446ebf18a82d061dbe5c for reading in non-blocking mode.
+2026-09-22T02:24:22.9909941+00:00 ContainerStatus: Successfully opened named pipe: /podr/container/pipe/7fed7a29b6ae_chedck-studio/stderr_557a348344e7446ebf18a82d061dbe5c.
+2026-09-22T02:24:22.9913115+00:00 ContainerStatus: Successfully removed non-blocking flag from /podr/container/pipe/7fed7a29b6ae_chedck-studio/stderr_557a348344e7446ebf18a82d061dbe5c.
+2026-09-22T02:24:22.9914679+00:00 ContainerStatus: Creating container with image: appsvc/python:3.12_20260910.3.tuxprod from registry: 10.1.0.6:13209 and fully qualified image name: 10.1.0.6:13209/appsvc/python:3.12_20260910.3.tuxprod
+2026-09-22T02:24:23.0864430+00:00 ContainerStream: INFO:     169.254.129.1:46687 - "GET / HTTP/1.1" 200 OK
+2026-09-22T02:24:23.5986527+00:00 ContainerStatus: Starting container: 7fed7a29b6ae_chedck-studio.
+2026-09-22T02:24:23.6243407+00:00 ContainerStatus: Starting watchers and probes.
+2026-09-22T02:24:23.6371134+00:00 ContainerStatus: Starting metrics collection.
+2026-09-22T02:24:23.6373194+00:00 ContainerStatus: Container is running.
+2026-09-22T02:24:23.6374201+00:00 ContainerStatus: State: Starting, Action: CreatingContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Container chedck-studio successfully created and is running., DetailsLevel: INFO
+2026-09-22T02:24:23.6669645+00:00 ContainerStatus: Container start method finished after 1054 ms.
+2026-09-22T02:24:23.6709102+00:00 ContainerStatus: State: Starting, Action: InitiatingSiteWarmUpProbe, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Container chedck-studio successfully created and is running., DetailsLevel: INFO
+2026-09-22T02:24:23.6709836+00:00 ContainerStatus: State: Starting, Action: WaitingForSiteWarmUpProbeSuccess, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Pinging warmup path to ensure container is ready to receive requests., DetailsLevel: INFO
+2026-09-22T02:24:23.7834067+00:00 ContainerStream:    _____                               
+2026-09-22T02:24:23.7841879+00:00 ContainerStream:   /  _  \ __________ _________   ____  
+2026-09-22T02:24:23.7841988+00:00 ContainerStream:  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2026-09-22T02:24:23.7842024+00:00 ContainerStream: /    |    \/    /|  |  /|  | \/\  ___/ 
+2026-09-22T02:24:23.7842058+00:00 ContainerStream: \____|__  /_____ \____/ |__|    \___  >
+2026-09-22T02:24:23.7842125+00:00 ContainerStream:         \/      \/                  \/ 
+2026-09-22T02:24:23.7842166+00:00 ContainerStream: A P P   S E R V I C E   O N   L I N U X
+2026-09-22T02:24:23.7842194+00:00 ContainerStream: 
+2026-09-22T02:24:23.7842227+00:00 ContainerStream: Documentation     : https://aka.ms/webapp-linux
+2026-09-22T02:24:23.7842260+00:00 ContainerStream: Python quickstart : https://aka.ms/python-qs
+2026-09-22T02:24:23.7842293+00:00 ContainerStream: Python version    : 3.12.13
+2026-09-22T02:24:23.7842327+00:00 ContainerStream: Instance name     : 10-30-0-37
+2026-09-22T02:24:23.7842391+00:00 ContainerStream: Instance id       : 739b989d3f5c405d4d94f37c15ddfbc3b1ee76fe66380df1a2f4e63ded4100a2
+2026-09-22T02:24:23.7842421+00:00 ContainerStream: 
+2026-09-22T02:24:23.7842450+00:00 ContainerStream: App port          : 8000
+2026-09-22T02:24:23.7842483+00:00 ContainerStream: Port selected by  : Default for this image
+2026-09-22T02:24:23.7842518+00:00 ContainerStream: (Learn more about the PORT appsetting https://aka.ms/webapp-python-settings)
+2026-09-22T02:24:23.7842549+00:00 ContainerStream: 
+2026-09-22T02:24:23.7842582+00:00 ContainerStream: Note: Any data outside '/home' is not persisted
+2026-09-22T02:24:23.7842627+00:00 ContainerStream: 
+2026-09-22T02:24:23.7842677+00:00 ContainerStream: ────────────────────────────────────────────────────────────────
+2026-09-22T02:24:23.7842719+00:00 ContainerStream:  Run 'apphelp' for available commands and aliases.
+2026-09-22T02:24:23.7842752+00:00 ContainerStream:  Run 'install-nettools' to install networking utilities.
+2026-09-22T02:24:23.7842795+00:00 ContainerStream: ────────────────────────────────────────────────────────────────
+2026-09-22T02:24:25.1852515+00:00 ContainerStream: Starting OpenBSD Secure Shell server: sshd.
+2026-09-22T02:24:25.1983671+00:00 ContainerStream: WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2026-09-22T02:24:25.2394428+00:00 ContainerStream: Updating certificates in /etc/ssl/certs...
+2026-09-22T02:24:32.4724484+00:00 ContainerStream: rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_ECC_Root_CA_2022.pem
+2026-09-22T02:24:32.4747895+00:00 ContainerStream: rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_RSA_Root_CA_2022.pem
+2026-09-22T02:24:32.6680784+00:00 ContainerStream: 4 added, 0 removed; done.
+2026-09-22T02:24:32.6694249+00:00 ContainerStream: rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2026-09-22T02:24:32.6703788+00:00 ContainerStream: Running hooks in /etc/ca-certificates/update.d...
+2026-09-22T02:24:32.6703918+00:00 ContainerStream: done.
+2026-09-22T02:24:32.6703960+00:00 ContainerStream: CA certificates copied and updated successfully.
+2026-09-22T02:24:32.8465253+00:00 ContainerStream: Site's appCommandLine: python -m uvicorn api_server:app --host 0.0.0.0 --port 8000 --app-dir src
+2026-09-22T02:24:33.1150714+00:00 ContainerStream: Starting periodic command scheduler: cron.
+2026-09-22T02:24:33.1168947+00:00 ContainerStream: Launching oryx with: create-script -appPath /home/site/wwwroot -output /opt/startup/startup.sh -virtualEnvName antenv -defaultApp /opt/defaultsite -userStartupCommand 'python -m uvicorn api_server:app --host 0.0.0.0 --port 8000 --app-dir src'
+2026-09-22T02:24:33.2632019+00:00 ContainerStream: Found build manifest file at '/home/site/wwwroot/oryx-manifest.toml'. Deserializing it...
+2026-09-22T02:24:33.2706999+00:00 ContainerStream: Build Operation ID: 537150d4da4f9654
+2026-09-22T02:24:33.2714877+00:00 ContainerStream: Output is compressed. Extracting it...
+2026-09-22T02:24:33.2715534+00:00 ContainerStream: Oryx Version: 0.2.20260710.1, Commit: 079b5b6294eb97d462d8f96bfa3243e9b85251da, ReleaseTagName: 20260710.1
+2026-09-22T02:24:33.2738831+00:00 ContainerStream: Found zstd-compressed tarball.
+2026-09-22T02:24:33.2738933+00:00 ContainerStream: Extracting '/home/site/wwwroot/output.tar.zst' to directory '/tmp/8df1850885d6ac7'...
+2026-09-22T02:24:33.2738992+00:00 ContainerStream: Using zstd for decompression of file: /home/site/wwwroot/output.tar.zst
+2026-09-22T02:24:37.4660397+00:00 ContainerStream: zstd tar Successfully extracted '/home/site/wwwroot/output.tar.zst' to '/tmp/8df1850885d6ac7'
+2026-09-22T02:24:37.4667992+00:00 ContainerStream: App path is set to '/tmp/8df1850885d6ac7'
+2026-09-22T02:24:37.8850937+00:00 ContainerStream: Writing output script to '/opt/startup/startup.sh'
+2026-09-22T02:24:38.6573729+00:00 ContainerStream: Using packages from virtual environment antenv located at /tmp/8df1850885d6ac7/antenv.
+2026-09-22T02:24:38.6574635+00:00 ContainerStream: Updated PYTHONPATH to '/home/site/wwwroot/src:/opt/startup/app_logs:/tmp/8df1850885d6ac7/antenv/lib/python3.12/site-packages'
+2026-09-22T02:24:38.9868388+00:00 ContainerStream: ERROR:    Error loading ASGI app. Could not import module "api_server".
+2026-09-22T02:24:39.0472191+00:00 ContainerStatus: Container has finished running with exit code: 3.
+2026-09-22T02:24:39.0583608+00:00 ContainerStatus: Container is terminating. Grace period: 5 seconds.
+2026-09-22T02:24:39.0675180+00:00 ContainerStatus: Stop and delete container. Retry count = 0
+2026-09-22T02:24:39.0683003+00:00 ContainerStatus: Stopping container: 7fed7a29b6ae_chedck-studio.
+2026-09-22T02:24:39.1872694+00:00 ContainerStatus: Deleting container: 7fed7a29b6ae_chedck-studio. Retry count = 0
+2026-09-22T02:24:39.6292057+00:00 ContainerStatus: Container spec TerminationMessagePolicy  path 
+2026-09-22T02:24:39.6358901+00:00 ContainerStatus: Container is terminated. Total time elapsed: 576 ms.
+2026-09-22T02:24:39.6360298+00:00 ContainerStatus: Site container: chedck-studio terminated during site startup.
+2026-09-22T02:24:39.6426955+00:00 ContainerStatus: State: Stopping, Action: CancellingStartup, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:24:39.6723882+00:00 ContainerStatus: Site startup probe failed after 15.9983112 seconds.
+2026-09-22T02:24:39.7815953+00:00 ContainerStatus: State: Stopping, Action: CancellingStartup, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:24:39.7997442+00:00 ContainerStatus: Failed to start site. Revert by stopping site.
+2026-09-22T02:24:39.8328080+00:00 ContainerStatus: State: Stopping, Action: StoppingSite, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:24:39.8439171+00:00 ContainerStatus: State: Stopping, Action: StoppingSiteContainers, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:24:39.8457465+00:00 ContainerStatus: Site: chedck-studio stopped.
+========== New Cold Start Attempt (2026-09-22T02:24:39.8646244+00:00) ==========
+2026-09-22T02:24:39.8646244+00:00 ContainerStatus: State: Stopping, Action: UnmountingVolumes, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:24:40.0637476+00:00 ContainerStatus: State: Stopping, Action: StoppingSiteNetworks, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:24:40.1788409+00:00 ContainerStatus: State: Stopped, Action: None, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Site stopped at 09/22/2026 02:24:40 (UTC), DetailsLevel: ERR
+2026-09-22T02:24:40.4336636+00:00 ContainerStatus: State: Stopped, Action: None, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Site stopped at 09/22/2026 02:24:40 (UTC), DetailsLevel: ERR
+2026-09-22T02:25:00.4913767+00:00 ContainerStatus: State: Stopping, Action: StoppingSite, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site started at 09/22/2026 02:14:32 (UTC), DetailsLevel: INFO
+2026-09-22T02:25:00.4972925+00:00 ContainerStatus: State: Stopping, Action: StoppingSiteContainers, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site started at 09/22/2026 02:14:32 (UTC), DetailsLevel: INFO
+2026-09-22T02:25:00.4974485+00:00 ContainerStatus: Container is terminating. Grace period: 5 seconds.
+2026-09-22T02:25:00.5441927+00:00 ContainerStatus: Stop and delete container. Retry count = 0
+2026-09-22T02:25:00.5442800+00:00 ContainerStatus: Stopping container: fa1d95412745_chedck-studio.
+2026-09-22T02:25:05.7842524+00:00 ContainerStatus: Deleting container: fa1d95412745_chedck-studio. Retry count = 0
+2026-09-22T02:25:06.6521428+00:00 ContainerStatus: Container spec TerminationMessagePolicy  path 
+2026-09-22T02:25:06.6522558+00:00 ContainerStatus: Container is terminated. Total time elapsed: 6154 ms.
+2026-09-22T02:25:06.6529280+00:00 ContainerStatus: Site: chedck-studio stopped.
+2026-09-22T02:27:31.6741122+00:00 ContainerStatus: State: Starting, Action: EstablishingSiteNetworks, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Site stopped at 09/22/2026 02:24:40 (UTC), DetailsLevel: ERR
+2026-09-22T02:27:32.2585556+00:00 ContainerStatus: State: Starting, Action: StartingSiteContainers, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Site stopped at 09/22/2026 02:24:40 (UTC), DetailsLevel: ERR
+2026-09-22T02:27:32.2590340+00:00 ContainerStatus: Container start method called.
+2026-09-22T02:27:32.2603765+00:00 ContainerStatus: State: Starting, Action: PullingImage, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Pulling image 10.1.0.6:13209/appsvc/python:3.12_20260910.3.tuxprod for chedck-studio., DetailsLevel: INFO
+2026-09-22T02:27:32.2604680+00:00 ContainerStatus: Establishing network.
+2026-09-22T02:27:32.2605573+00:00 ContainerStatus: Pulling image: appsvc/python:3.12_20260910.3.tuxprod.
+2026-09-22T02:27:32.4647072+00:00 ContainerStatus: Container is starting.
+2026-09-22T02:27:32.4649527+00:00 ContainerStatus: State: Starting, Action: MountingVolumes, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Mounting volumes for chedck-studio., DetailsLevel: INFO
+2026-09-22T02:27:32.4650207+00:00 ContainerStatus: Establishing user namespace if not established already.
+2026-09-22T02:27:32.4651046+00:00 ContainerStatus: Establishing network if not established already.
+2026-09-22T02:27:32.4651701+00:00 ContainerStatus: Mounting volumes.
+2026-09-22T02:27:32.4668226+00:00 ContainerStatus: Nested mountpoint 
+2026-09-22T02:27:32.4805460+00:00 ContainerStatus: Nested mountpoint volatile/logs
+2026-09-22T02:27:32.4955243+00:00 ContainerStatus: Nested mountpoint 
+2026-09-22T02:27:32.4960612+00:00 ContainerStatus: Nested mountpoint 
+2026-09-22T02:27:32.4969590+00:00 ContainerStatus: Nested mountpoint 
+2026-09-22T02:27:32.5037990+00:00 ContainerStatus: Nested mountpoint 
+2026-09-22T02:27:32.6584187+00:00 ContainerStatus: State: Starting, Action: CreatingContainer, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Finished pulling container image and mounting volumes for chedck-studio. Allocatinng the rest of the container resources to finish container creation., DetailsLevel: INFO
+2026-09-22T02:27:32.6585019+00:00 ContainerStatus: Creating container.
+2026-09-22T02:27:32.6620119+00:00 ContainerStatus: Creating pipes for streaming container io.
+2026-09-22T02:27:32.6620883+00:00 ContainerStatus: Creating stdout named pipe at /podr/container/pipe/8b18f1b93653_chedck-studio/stdout_f0ce85ca89c04e3d8a19d089849d59a2.
+2026-09-22T02:27:32.6628277+00:00 ContainerStatus: Successfully created stdout named pipe at: /podr/container/pipe/8b18f1b93653_chedck-studio/stdout_f0ce85ca89c04e3d8a19d089849d59a2.
+2026-09-22T02:27:32.6628916+00:00 ContainerStatus: Opening named pipe /podr/container/pipe/8b18f1b93653_chedck-studio/stdout_f0ce85ca89c04e3d8a19d089849d59a2 for reading in non-blocking mode.
+2026-09-22T02:27:32.6629697+00:00 ContainerStatus: Successfully opened named pipe: /podr/container/pipe/8b18f1b93653_chedck-studio/stdout_f0ce85ca89c04e3d8a19d089849d59a2.
+2026-09-22T02:27:32.6631925+00:00 ContainerStatus: Successfully removed non-blocking flag from /podr/container/pipe/8b18f1b93653_chedck-studio/stdout_f0ce85ca89c04e3d8a19d089849d59a2.
+2026-09-22T02:27:32.6633162+00:00 ContainerStatus: Creating stderr named pipe at /podr/container/pipe/8b18f1b93653_chedck-studio/stderr_105bf8e9dc4344bd9f4d1dda578d43e0.
+2026-09-22T02:27:32.6634331+00:00 ContainerStatus: Successfully created stderr named pipe at: /podr/container/pipe/8b18f1b93653_chedck-studio/stderr_105bf8e9dc4344bd9f4d1dda578d43e0.
+2026-09-22T02:27:32.6634873+00:00 ContainerStatus: Opening named pipe /podr/container/pipe/8b18f1b93653_chedck-studio/stderr_105bf8e9dc4344bd9f4d1dda578d43e0 for reading in non-blocking mode.
+2026-09-22T02:27:32.6635552+00:00 ContainerStatus: Successfully opened named pipe: /podr/container/pipe/8b18f1b93653_chedck-studio/stderr_105bf8e9dc4344bd9f4d1dda578d43e0.
+2026-09-22T02:27:32.6636143+00:00 ContainerStatus: Successfully removed non-blocking flag from /podr/container/pipe/8b18f1b93653_chedck-studio/stderr_105bf8e9dc4344bd9f4d1dda578d43e0.
+2026-09-22T02:27:32.6637190+00:00 ContainerStatus: Creating container with image: appsvc/python:3.12_20260910.3.tuxprod from registry: 10.1.0.6:13209 and fully qualified image name: 10.1.0.6:13209/appsvc/python:3.12_20260910.3.tuxprod
+2026-09-22T02:27:32.9696497+00:00 ContainerStatus: Starting container: 8b18f1b93653_chedck-studio.
+2026-09-22T02:27:33.0197280+00:00 ContainerStatus: Starting watchers and probes.
+2026-09-22T02:27:33.0212022+00:00 ContainerStatus: Starting metrics collection.
+2026-09-22T02:27:33.0213717+00:00 ContainerStatus: Container is running.
+2026-09-22T02:27:33.0215824+00:00 ContainerStatus: State: Starting, Action: CreatingContainer, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Container chedck-studio successfully created and is running., DetailsLevel: INFO
+2026-09-22T02:27:33.1184942+00:00 ContainerStatus: Container start method finished after 859 ms.
+2026-09-22T02:27:33.1190191+00:00 ContainerStatus: State: Starting, Action: InitiatingSiteWarmUpProbe, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Container chedck-studio successfully created and is running., DetailsLevel: INFO
+2026-09-22T02:27:33.1190496+00:00 ContainerStatus: State: Starting, Action: WaitingForSiteWarmUpProbeSuccess, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Pinging warmup path to ensure container is ready to receive requests., DetailsLevel: INFO
+2026-09-22T02:27:33.2059349+00:00 ContainerStream:    _____                               
+2026-09-22T02:27:33.2060685+00:00 ContainerStream:   /  _  \ __________ _________   ____  
+2026-09-22T02:27:33.2060733+00:00 ContainerStream:  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2026-09-22T02:27:33.2060761+00:00 ContainerStream: /    |    \/    /|  |  /|  | \/\  ___/ 
+2026-09-22T02:27:33.2060786+00:00 ContainerStream: \____|__  /_____ \____/ |__|    \___  >
+2026-09-22T02:27:33.2060812+00:00 ContainerStream:         \/      \/                  \/ 
+2026-09-22T02:27:33.2060836+00:00 ContainerStream: A P P   S E R V I C E   O N   L I N U X
+2026-09-22T02:27:33.2060859+00:00 ContainerStream: 
+2026-09-22T02:27:33.2060886+00:00 ContainerStream: Documentation     : https://aka.ms/webapp-linux
+2026-09-22T02:27:33.2060913+00:00 ContainerStream: Python quickstart : https://aka.ms/python-qs
+2026-09-22T02:27:33.2060936+00:00 ContainerStream: Python version    : 3.12.13
+2026-09-22T02:27:33.2060962+00:00 ContainerStream: Instance name     : 10-30-0-37
+2026-09-22T02:27:33.2061068+00:00 ContainerStream: Instance id       : 739b989d3f5c405d4d94f37c15ddfbc3b1ee76fe66380df1a2f4e63ded4100a2
+2026-09-22T02:27:33.2061091+00:00 ContainerStream: 
+2026-09-22T02:27:33.2061116+00:00 ContainerStream: App port          : 8000
+2026-09-22T02:27:33.2061144+00:00 ContainerStream: Port selected by  : Default for this image
+2026-09-22T02:27:33.2061171+00:00 ContainerStream: (Learn more about the PORT appsetting https://aka.ms/webapp-python-settings)
+2026-09-22T02:27:33.2061195+00:00 ContainerStream: 
+2026-09-22T02:27:33.2061221+00:00 ContainerStream: Note: Any data outside '/home' is not persisted
+2026-09-22T02:27:33.2061242+00:00 ContainerStream: 
+2026-09-22T02:27:33.2061282+00:00 ContainerStream: ────────────────────────────────────────────────────────────────
+2026-09-22T02:27:33.2061310+00:00 ContainerStream:  Run 'apphelp' for available commands and aliases.
+2026-09-22T02:27:33.2061335+00:00 ContainerStream:  Run 'install-nettools' to install networking utilities.
+2026-09-22T02:27:33.2061370+00:00 ContainerStream: ────────────────────────────────────────────────────────────────
+2026-09-22T02:27:34.5449079+00:00 ContainerStream: Starting OpenBSD Secure Shell server: sshd.
+2026-09-22T02:27:34.5614931+00:00 ContainerStream: WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2026-09-22T02:27:34.5874040+00:00 ContainerStream: Updating certificates in /etc/ssl/certs...
+2026-09-22T02:27:40.8165681+00:00 ContainerStream: rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_ECC_Root_CA_2022.pem
+2026-09-22T02:27:40.8166201+00:00 ContainerStream: rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_RSA_Root_CA_2022.pem
+2026-09-22T02:27:41.0075489+00:00 ContainerStream: rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2026-09-22T02:27:41.0354863+00:00 ContainerStream: 4 added, 0 removed; done.
+2026-09-22T02:27:41.0358945+00:00 ContainerStream: Running hooks in /etc/ca-certificates/update.d...
+2026-09-22T02:27:41.0449159+00:00 ContainerStream: done.
+2026-09-22T02:27:41.0552495+00:00 ContainerStream: CA certificates copied and updated successfully.
+2026-09-22T02:27:41.2768792+00:00 ContainerStream: Site's appCommandLine: python -m uvicorn api_server:app --host 0.0.0.0 --port 8000 --app-dir src
+2026-09-22T02:27:41.4644487+00:00 ContainerStream: Starting periodic command scheduler: cron.
+2026-09-22T02:27:41.4660478+00:00 ContainerStream: Launching oryx with: create-script -appPath /home/site/wwwroot -output /opt/startup/startup.sh -virtualEnvName antenv -defaultApp /opt/defaultsite -userStartupCommand 'python -m uvicorn api_server:app --host 0.0.0.0 --port 8000 --app-dir src'
+2026-09-22T02:27:41.5037250+00:00 ContainerStream: Found build manifest file at '/home/site/wwwroot/oryx-manifest.toml'. Deserializing it...
+2026-09-22T02:27:41.5064221+00:00 ContainerStream: Build Operation ID: 537150d4da4f9654
+2026-09-22T02:27:41.5085413+00:00 ContainerStream: Oryx Version: 0.2.20260710.1, Commit: 079b5b6294eb97d462d8f96bfa3243e9b85251da, ReleaseTagName: 20260710.1
+2026-09-22T02:27:41.5085628+00:00 ContainerStream: Output is compressed. Extracting it...
+2026-09-22T02:27:41.5100448+00:00 ContainerStream: Found zstd-compressed tarball.
+2026-09-22T02:27:41.5106998+00:00 ContainerStream: Extracting '/home/site/wwwroot/output.tar.zst' to directory '/tmp/8df1850885d6ac7'...
+2026-09-22T02:27:41.5107080+00:00 ContainerStream: Using zstd for decompression of file: /home/site/wwwroot/output.tar.zst
+2026-09-22T02:27:44.1508693+00:00 ContainerStream: zstd tar Successfully extracted '/home/site/wwwroot/output.tar.zst' to '/tmp/8df1850885d6ac7'
+2026-09-22T02:27:44.1509081+00:00 ContainerStream: App path is set to '/tmp/8df1850885d6ac7'
+2026-09-22T02:27:44.5871723+00:00 ContainerStream: Writing output script to '/opt/startup/startup.sh'
+2026-09-22T02:27:45.4815646+00:00 ContainerStream: Using packages from virtual environment antenv located at /tmp/8df1850885d6ac7/antenv.
+2026-09-22T02:27:45.4816034+00:00 ContainerStream: Updated PYTHONPATH to '/home/site/wwwroot/src:/opt/startup/app_logs:/tmp/8df1850885d6ac7/antenv/lib/python3.12/site-packages'
+2026-09-22T02:27:47.3987614+00:00 ContainerStream: ERROR:    Error loading ASGI app. Could not import module "api_server".
+2026-09-22T02:27:47.4865379+00:00 ContainerStatus: Container has finished running with exit code: 3.
+2026-09-22T02:27:47.4866254+00:00 ContainerStatus: Container is terminating. Grace period: 5 seconds.
+2026-09-22T02:27:47.4887905+00:00 ContainerStatus: Stop and delete container. Retry count = 0
+2026-09-22T02:27:47.4890189+00:00 ContainerStatus: Stopping container: 8b18f1b93653_chedck-studio.
+2026-09-22T02:27:47.5340105+00:00 ContainerStatus: Deleting container: 8b18f1b93653_chedck-studio. Retry count = 0
+2026-09-22T02:27:47.9887224+00:00 ContainerStatus: Container spec TerminationMessagePolicy  path 
+2026-09-22T02:27:47.9892595+00:00 ContainerStatus: Container is terminated. Total time elapsed: 502 ms.
+2026-09-22T02:27:47.9893263+00:00 ContainerStatus: Site container: chedck-studio terminated during site startup.
+2026-09-22T02:27:47.9894308+00:00 ContainerStatus: State: Stopping, Action: CancellingStartup, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:27:47.9920784+00:00 ContainerStatus: Site startup probe failed after 14.8719417 seconds.
+2026-09-22T02:27:48.1167161+00:00 ContainerStatus: State: Stopping, Action: CancellingStartup, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:27:48, LastErrorDetails: Container exited with exit code 3 during startup after 15.0s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:27:48.1176857+00:00 ContainerStatus: Failed to start site. Revert by stopping site.
+2026-09-22T02:27:48.1177864+00:00 ContainerStatus: State: Stopping, Action: StoppingSite, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:27:48, LastErrorDetails: Container exited with exit code 3 during startup after 15.0s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:27:48.1180072+00:00 ContainerStatus: State: Stopping, Action: StoppingSiteContainers, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:27:48, LastErrorDetails: Container exited with exit code 3 during startup after 15.0s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:27:48.1180265+00:00 ContainerStatus: Site: chedck-studio stopped.
+========== New Cold Start Attempt (2026-09-22T02:30:02.7654443+00:00) ==========
+2026-09-22T02:30:02.7654443+00:00 ContainerStatus: State: Starting, Action: EstablishingSiteNetworks, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:27:48, LastErrorDetails: Container exited with exit code 3 during startup after 15.0s. Please inspect your container logs for more details., Details: Site stopped at 09/22/2026 02:27:48 (UTC), DetailsLevel: WARN
+2026-09-22T02:30:03.3356898+00:00 ContainerStatus: State: Starting, Action: StartingSiteContainers, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:27:48, LastErrorDetails: Container exited with exit code 3 during startup after 15.0s. Please inspect your container logs for more details., Details: Site stopped at 09/22/2026 02:27:48 (UTC), DetailsLevel: WARN
+2026-09-22T02:30:03.3366185+00:00 ContainerStatus: Container start method called.
+2026-09-22T02:30:03.3368505+00:00 ContainerStatus: State: Starting, Action: PullingImage, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:27:48, LastErrorDetails: Container exited with exit code 3 during startup after 15.0s. Please inspect your container logs for more details., Details: Pulling image 10.1.0.5:13209/appsvc/python:3.12_20260910.3.tuxprod for chedck-studio., DetailsLevel: INFO
+2026-09-22T02:30:03.3373641+00:00 ContainerStatus: Establishing network.
+2026-09-22T02:30:03.3421786+00:00 ContainerStatus: Pulling image: appsvc/python:3.12_20260910.3.tuxprod.
+2026-09-22T02:30:03.4996783+00:00 ContainerStatus: Container is starting.
+2026-09-22T02:30:03.4998049+00:00 ContainerStatus: State: Starting, Action: MountingVolumes, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:27:48, LastErrorDetails: Container exited with exit code 3 during startup after 15.0s. Please inspect your container logs for more details., Details: Mounting volumes for chedck-studio., DetailsLevel: INFO
+2026-09-22T02:30:03.4998805+00:00 ContainerStatus: Establishing user namespace if not established already.
+2026-09-22T02:30:03.4999402+00:00 ContainerStatus: Establishing network if not established already.
+2026-09-22T02:30:03.5000036+00:00 ContainerStatus: Mounting volumes.
+2026-09-22T02:30:03.5001503+00:00 ContainerStatus: Nested mountpoint 
+2026-09-22T02:30:03.5021163+00:00 ContainerStatus: Nested mountpoint volatile/logs
+2026-09-22T02:30:03.5077860+00:00 ContainerStatus: Nested mountpoint 
+2026-09-22T02:30:03.5083514+00:00 ContainerStatus: Nested mountpoint 
+2026-09-22T02:30:03.5089535+00:00 ContainerStatus: Nested mountpoint 
+2026-09-22T02:30:03.5185702+00:00 ContainerStatus: Nested mountpoint 
+2026-09-22T02:30:03.7214582+00:00 ContainerStatus: State: Starting, Action: CreatingContainer, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:27:48, LastErrorDetails: Container exited with exit code 3 during startup after 15.0s. Please inspect your container logs for more details., Details: Finished pulling container image and mounting volumes for chedck-studio. Allocatinng the rest of the container resources to finish container creation., DetailsLevel: INFO
+2026-09-22T02:30:03.7215622+00:00 ContainerStatus: Creating container.
+2026-09-22T02:30:03.7216670+00:00 ContainerStatus: Creating pipes for streaming container io.
+2026-09-22T02:30:03.7217646+00:00 ContainerStatus: Creating stdout named pipe at /podr/container/pipe/13dd518c2dec_chedck-studio/stdout_d82e5b8479ba432ea4985c52cb83b6a2.
+2026-09-22T02:30:03.7219561+00:00 ContainerStatus: Successfully created stdout named pipe at: /podr/container/pipe/13dd518c2dec_chedck-studio/stdout_d82e5b8479ba432ea4985c52cb83b6a2.
+2026-09-22T02:30:03.7220889+00:00 ContainerStatus: Opening named pipe /podr/container/pipe/13dd518c2dec_chedck-studio/stdout_d82e5b8479ba432ea4985c52cb83b6a2 for reading in non-blocking mode.
+2026-09-22T02:30:03.7221991+00:00 ContainerStatus: Successfully opened named pipe: /podr/container/pipe/13dd518c2dec_chedck-studio/stdout_d82e5b8479ba432ea4985c52cb83b6a2.
+2026-09-22T02:30:03.7222710+00:00 ContainerStatus: Successfully removed non-blocking flag from /podr/container/pipe/13dd518c2dec_chedck-studio/stdout_d82e5b8479ba432ea4985c52cb83b6a2.
+2026-09-22T02:30:03.7225041+00:00 ContainerStatus: Creating stderr named pipe at /podr/container/pipe/13dd518c2dec_chedck-studio/stderr_afdc3d11b95b4f05b31ae6a3551e69ba.
+2026-09-22T02:30:03.7227592+00:00 ContainerStatus: Successfully created stderr named pipe at: /podr/container/pipe/13dd518c2dec_chedck-studio/stderr_afdc3d11b95b4f05b31ae6a3551e69ba.
+2026-09-22T02:30:03.7228290+00:00 ContainerStatus: Opening named pipe /podr/container/pipe/13dd518c2dec_chedck-studio/stderr_afdc3d11b95b4f05b31ae6a3551e69ba for reading in non-blocking mode.
+2026-09-22T02:30:03.7228998+00:00 ContainerStatus: Successfully opened named pipe: /podr/container/pipe/13dd518c2dec_chedck-studio/stderr_afdc3d11b95b4f05b31ae6a3551e69ba.
+2026-09-22T02:30:03.7229553+00:00 ContainerStatus: Successfully removed non-blocking flag from /podr/container/pipe/13dd518c2dec_chedck-studio/stderr_afdc3d11b95b4f05b31ae6a3551e69ba.
+2026-09-22T02:30:03.7271652+00:00 ContainerStatus: Creating container with image: appsvc/python:3.12_20260910.3.tuxprod from registry: 10.1.0.5:13209 and fully qualified image name: 10.1.0.5:13209/appsvc/python:3.12_20260910.3.tuxprod
+2026-09-22T02:30:03.9596284+00:00 ContainerStatus: Starting container: 13dd518c2dec_chedck-studio.
+2026-09-22T02:30:04.0091386+00:00 ContainerStatus: Starting watchers and probes.
+2026-09-22T02:30:04.0094681+00:00 ContainerStatus: Starting metrics collection.
+2026-09-22T02:30:04.0095683+00:00 ContainerStatus: Container is running.
+2026-09-22T02:30:04.0096462+00:00 ContainerStatus: State: Starting, Action: CreatingContainer, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:27:48, LastErrorDetails: Container exited with exit code 3 during startup after 15.0s. Please inspect your container logs for more details., Details: Container chedck-studio successfully created and is running., DetailsLevel: INFO
+2026-09-22T02:30:04.0485581+00:00 ContainerStatus: Container start method finished after 711 ms.
+2026-09-22T02:30:04.0526765+00:00 ContainerStatus: State: Starting, Action: InitiatingSiteWarmUpProbe, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:27:48, LastErrorDetails: Container exited with exit code 3 during startup after 15.0s. Please inspect your container logs for more details., Details: Container chedck-studio successfully created and is running., DetailsLevel: INFO
+2026-09-22T02:30:04.0527061+00:00 ContainerStatus: State: Starting, Action: WaitingForSiteWarmUpProbeSuccess, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:27:48, LastErrorDetails: Container exited with exit code 3 during startup after 15.0s. Please inspect your container logs for more details., Details: Pinging warmup path to ensure container is ready to receive requests., DetailsLevel: INFO
+2026-09-22T02:30:04.1800887+00:00 ContainerStream:    _____                               
+2026-09-22T02:30:04.1803397+00:00 ContainerStream:   /  _  \ __________ _________   ____  
+2026-09-22T02:30:04.1803450+00:00 ContainerStream:  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2026-09-22T02:30:04.1803477+00:00 ContainerStream: /    |    \/    /|  |  /|  | \/\  ___/ 
+2026-09-22T02:30:04.1803499+00:00 ContainerStream: \____|__  /_____ \____/ |__|    \___  >
+2026-09-22T02:30:04.1803522+00:00 ContainerStream:         \/      \/                  \/ 
+2026-09-22T02:30:04.1803544+00:00 ContainerStream: A P P   S E R V I C E   O N   L I N U X
+2026-09-22T02:30:04.1803564+00:00 ContainerStream: 
+2026-09-22T02:30:04.1803606+00:00 ContainerStream: Documentation     : https://aka.ms/webapp-linux
+2026-09-22T02:30:04.1803631+00:00 ContainerStream: Python quickstart : https://aka.ms/python-qs
+2026-09-22T02:30:04.1803654+00:00 ContainerStream: Python version    : 3.12.13
+2026-09-22T02:30:04.1803676+00:00 ContainerStream: Instance name     : 10-30-0-37
+2026-09-22T02:30:04.1803986+00:00 ContainerStream: Instance id       : 739b989d3f5c405d4d94f37c15ddfbc3b1ee76fe66380df1a2f4e63ded4100a2
+2026-09-22T02:30:04.1804030+00:00 ContainerStream: 
+2026-09-22T02:30:04.1804064+00:00 ContainerStream: App port          : 8000
+2026-09-22T02:30:04.1804128+00:00 ContainerStream: Port selected by  : Default for this image
+2026-09-22T02:30:04.1804163+00:00 ContainerStream: (Learn more about the PORT appsetting https://aka.ms/webapp-python-settings)
+2026-09-22T02:30:04.1804195+00:00 ContainerStream: 
+2026-09-22T02:30:04.1804226+00:00 ContainerStream: Note: Any data outside '/home' is not persisted
+2026-09-22T02:30:04.1804253+00:00 ContainerStream: 
+2026-09-22T02:30:04.1804297+00:00 ContainerStream: ────────────────────────────────────────────────────────────────
+2026-09-22T02:30:04.1804332+00:00 ContainerStream:  Run 'apphelp' for available commands and aliases.
+2026-09-22T02:30:04.1804373+00:00 ContainerStream:  Run 'install-nettools' to install networking utilities.
+2026-09-22T02:30:04.1804411+00:00 ContainerStream: ────────────────────────────────────────────────────────────────
+2026-09-22T02:30:06.1563855+00:00 ContainerStream: Starting OpenBSD Secure Shell server: sshd.
+2026-09-22T02:30:06.1706354+00:00 ContainerStream: WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2026-09-22T02:30:06.2097210+00:00 ContainerStream: Updating certificates in /etc/ssl/certs...
+2026-09-22T02:30:13.1840602+00:00 ContainerStream: rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_ECC_Root_CA_2022.pem
+2026-09-22T02:30:13.1883862+00:00 ContainerStream: rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_RSA_Root_CA_2022.pem
+2026-09-22T02:30:13.2780116+00:00 ContainerStream: rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2026-09-22T02:30:13.3043873+00:00 ContainerStream: 4 added, 0 removed; done.
+2026-09-22T02:30:13.3055254+00:00 ContainerStream: Running hooks in /etc/ca-certificates/update.d...
+2026-09-22T02:30:13.3086758+00:00 ContainerStream: done.
+2026-09-22T02:30:13.3216986+00:00 ContainerStream: CA certificates copied and updated successfully.
+2026-09-22T02:30:13.7978845+00:00 ContainerStream: Site's appCommandLine: cd /home/site/wwwroot/src && python -m uvicorn api_server:app --host 0.0.0.0 --port 8000
+2026-09-22T02:30:14.1117968+00:00 ContainerStream: Starting periodic command scheduler: cron.
+2026-09-22T02:30:14.1129497+00:00 ContainerStream: Launching oryx with: create-script -appPath /home/site/wwwroot -output /opt/startup/startup.sh -virtualEnvName antenv -defaultApp /opt/defaultsite -userStartupCommand 'cd /home/site/wwwroot/src && python -m uvicorn api_server:app --host 0.0.0.0 --port 8000'
+2026-09-22T02:30:14.2633847+00:00 ContainerStream: Found build manifest file at '/home/site/wwwroot/oryx-manifest.toml'. Deserializing it...
+2026-09-22T02:30:14.2699935+00:00 ContainerStream: Build Operation ID: 537150d4da4f9654
+2026-09-22T02:30:14.2744123+00:00 ContainerStream: Oryx Version: 0.2.20260710.1, Commit: 079b5b6294eb97d462d8f96bfa3243e9b85251da, ReleaseTagName: 20260710.1
+2026-09-22T02:30:14.2747400+00:00 ContainerStream: Output is compressed. Extracting it...
+2026-09-22T02:30:14.2793847+00:00 ContainerStream: Found zstd-compressed tarball.
+2026-09-22T02:30:14.2799929+00:00 ContainerStream: Extracting '/home/site/wwwroot/output.tar.zst' to directory '/tmp/8df1850885d6ac7'...
+2026-09-22T02:30:14.2805592+00:00 ContainerStream: Using zstd for decompression of file: /home/site/wwwroot/output.tar.zst
+2026-09-22T02:30:16.8166647+00:00 ContainerStream: zstd tar Successfully extracted '/home/site/wwwroot/output.tar.zst' to '/tmp/8df1850885d6ac7'
+2026-09-22T02:30:16.8166986+00:00 ContainerStream: App path is set to '/tmp/8df1850885d6ac7'
+2026-09-22T02:30:17.1676136+00:00 ContainerStream: Writing output script to '/opt/startup/startup.sh'
+2026-09-22T02:30:17.8637204+00:00 ContainerStream: Using packages from virtual environment antenv located at /tmp/8df1850885d6ac7/antenv.
+2026-09-22T02:30:17.8637885+00:00 ContainerStream: Updated PYTHONPATH to '/home/site/wwwroot/src:/opt/startup/app_logs:/tmp/8df1850885d6ac7/antenv/lib/python3.12/site-packages'
+2026-09-22T02:30:17.8772619+00:00 ContainerStream: /opt/startup/startup.sh: 26: cd: can't cd to /home/site/wwwroot/src
+2026-09-22T02:30:17.9111918+00:00 ContainerStatus: Container has finished running with exit code: 2.
+2026-09-22T02:30:17.9112835+00:00 ContainerStatus: Container is terminating. Grace period: 5 seconds.
+2026-09-22T02:30:17.9133251+00:00 ContainerStatus: Stop and delete container. Retry count = 0
+2026-09-22T02:30:17.9135150+00:00 ContainerStatus: Stopping container: 13dd518c2dec_chedck-studio.
+2026-09-22T02:30:18.1460087+00:00 ContainerStatus: Deleting container: 13dd518c2dec_chedck-studio. Retry count = 0
+2026-09-22T02:30:18.5148101+00:00 ContainerStatus: Container spec TerminationMessagePolicy  path 
+2026-09-22T02:30:18.5153177+00:00 ContainerStatus: Container is terminated. Total time elapsed: 603 ms.
+2026-09-22T02:30:18.5159645+00:00 ContainerStatus: Site container: chedck-studio terminated during site startup.
+2026-09-22T02:30:18.5160959+00:00 ContainerStatus: State: Stopping, Action: CancellingStartup, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:27:48, LastErrorDetails: Container exited with exit code 3 during startup after 15.0s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:30:18.5189938+00:00 ContainerStatus: Site startup probe failed after 14.4652616 seconds.
+2026-09-22T02:30:18.6035589+00:00 ContainerStatus: State: Stopping, Action: CancellingStartup, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:30:18, LastErrorDetails: Container exited with exit code 2 during startup after 14.5s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:30:18.6050134+00:00 ContainerStatus: Failed to start site. Revert by stopping site.
+2026-09-22T02:30:18.6050984+00:00 ContainerStatus: State: Stopping, Action: StoppingSite, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:30:18, LastErrorDetails: Container exited with exit code 2 during startup after 14.5s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:30:18.6053521+00:00 ContainerStatus: State: Stopping, Action: StoppingSiteContainers, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:30:18, LastErrorDetails: Container exited with exit code 2 during startup after 14.5s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:30:18.6053699+00:00 ContainerStatus: Site: chedck-studio stopped.

@@ -1,0 +1,222 @@
+2026-09-22T02:14:10.5132465Z State: Starting, Action: EstablishingSiteNetworks, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-09-22T02:14:11.3001913Z State: Starting, Action: StartingSiteContainers, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-09-22T02:14:11.3003479Z Container start method called.
+2026-09-22T02:14:11.3038031Z State: Starting, Action: PullingImage, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Pulling image 10.1.0.5:13209/appsvc/python:3.12_20260910.3.tuxprod for chedck-studio., DetailsLevel: INFO
+2026-09-22T02:14:11.3041788Z Establishing network.
+2026-09-22T02:14:11.3044560Z Pulling image: appsvc/python:3.12_20260910.3.tuxprod.
+2026-09-22T02:14:11.6611080Z Image appsvc/python:3.12_20260910.3.tuxprod is pulled from registry 10.1.0.5:13209
+2026-09-22T02:14:11.6612912Z Container is starting.
+2026-09-22T02:14:11.6614106Z State: Starting, Action: MountingVolumes, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Mounting volumes for chedck-studio., DetailsLevel: INFO
+2026-09-22T02:14:11.6616233Z Establishing user namespace if not established already.
+2026-09-22T02:14:11.6617250Z Establishing network if not established already.
+2026-09-22T02:14:11.6618544Z Mounting volumes.
+2026-09-22T02:14:11.6620689Z Nested mountpoint 
+2026-09-22T02:14:11.6741227Z Nested mountpoint volatile/logs
+2026-09-22T02:14:11.7160010Z Nested mountpoint 
+2026-09-22T02:14:11.7165479Z Nested mountpoint 
+2026-09-22T02:14:11.7207224Z Nested mountpoint 
+2026-09-22T02:14:11.7285629Z Nested mountpoint 
+2026-09-22T02:14:11.9101376Z State: Starting, Action: CreatingContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Finished pulling container image and mounting volumes for chedck-studio. Allocatinng the rest of the container resources to finish container creation., DetailsLevel: INFO
+2026-09-22T02:14:11.9102084Z Creating container.
+2026-09-22T02:14:11.9106652Z Creating pipes for streaming container io.
+2026-09-22T02:14:11.9107329Z Creating stdout named pipe at /podr/container/pipe/fa1d95412745_chedck-studio/stdout_cd1794db41d342b6bb7f79579c8259cd.
+2026-09-22T02:14:11.9125903Z Successfully created stdout named pipe at: /podr/container/pipe/fa1d95412745_chedck-studio/stdout_cd1794db41d342b6bb7f79579c8259cd.
+2026-09-22T02:14:11.9137137Z Opening named pipe /podr/container/pipe/fa1d95412745_chedck-studio/stdout_cd1794db41d342b6bb7f79579c8259cd for reading in non-blocking mode.
+2026-09-22T02:14:11.9139531Z Successfully opened named pipe: /podr/container/pipe/fa1d95412745_chedck-studio/stdout_cd1794db41d342b6bb7f79579c8259cd.
+2026-09-22T02:14:11.9141704Z Successfully removed non-blocking flag from /podr/container/pipe/fa1d95412745_chedck-studio/stdout_cd1794db41d342b6bb7f79579c8259cd.
+2026-09-22T02:14:11.9143043Z Creating stderr named pipe at /podr/container/pipe/fa1d95412745_chedck-studio/stderr_37c00a44dd0845ec96f6495ea9bfb787.
+2026-09-22T02:14:11.9144300Z Successfully created stderr named pipe at: /podr/container/pipe/fa1d95412745_chedck-studio/stderr_37c00a44dd0845ec96f6495ea9bfb787.
+2026-09-22T02:14:11.9144858Z Opening named pipe /podr/container/pipe/fa1d95412745_chedck-studio/stderr_37c00a44dd0845ec96f6495ea9bfb787 for reading in non-blocking mode.
+2026-09-22T02:14:11.9145627Z Successfully opened named pipe: /podr/container/pipe/fa1d95412745_chedck-studio/stderr_37c00a44dd0845ec96f6495ea9bfb787.
+2026-09-22T02:14:11.9146233Z Successfully removed non-blocking flag from /podr/container/pipe/fa1d95412745_chedck-studio/stderr_37c00a44dd0845ec96f6495ea9bfb787.
+2026-09-22T02:14:11.9147634Z Creating container with image: appsvc/python:3.12_20260910.3.tuxprod from registry: 10.1.0.5:13209 and fully qualified image name: 10.1.0.5:13209/appsvc/python:3.12_20260910.3.tuxprod
+2026-09-22T02:14:12.4663258Z Starting container: fa1d95412745_chedck-studio.
+2026-09-22T02:14:12.4846082Z Starting watchers and probes.
+2026-09-22T02:14:12.4849807Z Starting metrics collection.
+2026-09-22T02:14:12.4851281Z Container is running.
+2026-09-22T02:14:12.4852331Z State: Starting, Action: CreatingContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Container chedck-studio successfully created and is running., DetailsLevel: INFO
+2026-09-22T02:14:12.6000442Z Container start method finished after 1299 ms.
+2026-09-22T02:14:12.6004116Z State: Starting, Action: InitiatingSiteWarmUpProbe, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Container chedck-studio successfully created and is running., DetailsLevel: INFO
+2026-09-22T02:14:12.6077891Z State: Starting, Action: WaitingForSiteWarmUpProbeSuccess, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Pinging warmup path to ensure container is ready to receive requests., DetailsLevel: INFO
+2026-09-22T02:14:32.0427747Z Site startup probe succeeded after 19.3919153 seconds.
+2026-09-22T02:14:32.2810005Z State: Starting, Action: WarmUpProbeSucceeded, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site startup probe succeeded after 19.3919153 seconds., DetailsLevel: INFO
+2026-09-22T02:14:32.4870180Z Site is running with deployment version: 290b4600-9a5e-47ea-95a8-bc2ff403f9dd
+2026-09-22T02:14:32.4921668Z Site started.
+2026-09-22T02:14:32.4929667Z State: Started, Action: None, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site started at 09/22/2026 02:14:32 (UTC), DetailsLevel: INFO
+2026-09-22T02:14:32.5427591Z Site is running with patch version PYTHON-3.12.13
+2026-09-22T02:24:21.5265242Z State: Starting, Action: EstablishingSiteNetworks, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-09-22T02:24:22.6098247Z State: Starting, Action: StartingSiteContainers, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-09-22T02:24:22.6099273Z Container start method called.
+2026-09-22T02:24:22.6099721Z State: Starting, Action: PullingImage, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Pulling image 10.1.0.6:13209/appsvc/python:3.12_20260910.3.tuxprod for chedck-studio., DetailsLevel: INFO
+2026-09-22T02:24:22.6100311Z Establishing network.
+2026-09-22T02:24:22.6101332Z Pulling image: appsvc/python:3.12_20260910.3.tuxprod.
+2026-09-22T02:24:22.8185948Z Image appsvc/python:3.12_20260910.3.tuxprod is pulled from registry 10.1.0.6:13209
+2026-09-22T02:24:22.8193347Z Container is starting.
+2026-09-22T02:24:22.8194060Z State: Starting, Action: MountingVolumes, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Mounting volumes for chedck-studio., DetailsLevel: INFO
+2026-09-22T02:24:22.8194498Z Establishing user namespace if not established already.
+2026-09-22T02:24:22.8195023Z Establishing network if not established already.
+2026-09-22T02:24:22.8195552Z Mounting volumes.
+2026-09-22T02:24:22.8197085Z Nested mountpoint 
+2026-09-22T02:24:22.8278423Z Nested mountpoint volatile/logs
+2026-09-22T02:24:22.8410663Z Nested mountpoint 
+2026-09-22T02:24:22.8445890Z Nested mountpoint 
+2026-09-22T02:24:22.8468501Z Nested mountpoint 
+2026-09-22T02:24:22.8491015Z Nested mountpoint 
+2026-09-22T02:24:22.9877500Z State: Starting, Action: CreatingContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Finished pulling container image and mounting volumes for chedck-studio. Allocatinng the rest of the container resources to finish container creation., DetailsLevel: INFO
+2026-09-22T02:24:22.9878288Z Creating container.
+2026-09-22T02:24:22.9880681Z Creating pipes for streaming container io.
+2026-09-22T02:24:22.9881633Z Creating stdout named pipe at /podr/container/pipe/7fed7a29b6ae_chedck-studio/stdout_c9526524a0af4078ad95e1d67131488b.
+2026-09-22T02:24:22.9895404Z Successfully created stdout named pipe at: /podr/container/pipe/7fed7a29b6ae_chedck-studio/stdout_c9526524a0af4078ad95e1d67131488b.
+2026-09-22T02:24:22.9899499Z Opening named pipe /podr/container/pipe/7fed7a29b6ae_chedck-studio/stdout_c9526524a0af4078ad95e1d67131488b for reading in non-blocking mode.
+2026-09-22T02:24:22.9900604Z Successfully opened named pipe: /podr/container/pipe/7fed7a29b6ae_chedck-studio/stdout_c9526524a0af4078ad95e1d67131488b.
+2026-09-22T02:24:22.9901398Z Successfully removed non-blocking flag from /podr/container/pipe/7fed7a29b6ae_chedck-studio/stdout_c9526524a0af4078ad95e1d67131488b.
+2026-09-22T02:24:22.9905349Z Creating stderr named pipe at /podr/container/pipe/7fed7a29b6ae_chedck-studio/stderr_557a348344e7446ebf18a82d061dbe5c.
+2026-09-22T02:24:22.9906658Z Successfully created stderr named pipe at: /podr/container/pipe/7fed7a29b6ae_chedck-studio/stderr_557a348344e7446ebf18a82d061dbe5c.
+2026-09-22T02:24:22.9907414Z Opening named pipe /podr/container/pipe/7fed7a29b6ae_chedck-studio/stderr_557a348344e7446ebf18a82d061dbe5c for reading in non-blocking mode.
+2026-09-22T02:24:22.9909941Z Successfully opened named pipe: /podr/container/pipe/7fed7a29b6ae_chedck-studio/stderr_557a348344e7446ebf18a82d061dbe5c.
+2026-09-22T02:24:22.9913115Z Successfully removed non-blocking flag from /podr/container/pipe/7fed7a29b6ae_chedck-studio/stderr_557a348344e7446ebf18a82d061dbe5c.
+2026-09-22T02:24:22.9914679Z Creating container with image: appsvc/python:3.12_20260910.3.tuxprod from registry: 10.1.0.6:13209 and fully qualified image name: 10.1.0.6:13209/appsvc/python:3.12_20260910.3.tuxprod
+2026-09-22T02:24:23.5986527Z Starting container: 7fed7a29b6ae_chedck-studio.
+2026-09-22T02:24:23.6243407Z Starting watchers and probes.
+2026-09-22T02:24:23.6371134Z Starting metrics collection.
+2026-09-22T02:24:23.6373194Z Container is running.
+2026-09-22T02:24:23.6374201Z State: Starting, Action: CreatingContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Container chedck-studio successfully created and is running., DetailsLevel: INFO
+2026-09-22T02:24:23.6669645Z Container start method finished after 1054 ms.
+2026-09-22T02:24:23.6709102Z State: Starting, Action: InitiatingSiteWarmUpProbe, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Container chedck-studio successfully created and is running., DetailsLevel: INFO
+2026-09-22T02:24:23.6709836Z State: Starting, Action: WaitingForSiteWarmUpProbeSuccess, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Pinging warmup path to ensure container is ready to receive requests., DetailsLevel: INFO
+2026-09-22T02:24:39.0472191Z Container has finished running with exit code: 3.
+2026-09-22T02:24:39.0583608Z Container is terminating. Grace period: 5 seconds.
+2026-09-22T02:24:39.0675180Z Stop and delete container. Retry count = 0
+2026-09-22T02:24:39.0683003Z Stopping container: 7fed7a29b6ae_chedck-studio.
+2026-09-22T02:24:39.1872694Z Deleting container: 7fed7a29b6ae_chedck-studio. Retry count = 0
+2026-09-22T02:24:39.6292057Z Container spec TerminationMessagePolicy  path 
+2026-09-22T02:24:39.6358901Z Container is terminated. Total time elapsed: 576 ms.
+2026-09-22T02:24:39.6360298Z Site container: chedck-studio terminated during site startup.
+2026-09-22T02:24:39.6426955Z State: Stopping, Action: CancellingStartup, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:24:39.6723882Z Site startup probe failed after 15.9983112 seconds.
+2026-09-22T02:24:39.7815953Z State: Stopping, Action: CancellingStartup, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:24:39.7997442Z Failed to start site. Revert by stopping site.
+2026-09-22T02:24:39.8328080Z State: Stopping, Action: StoppingSite, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:24:39.8439171Z State: Stopping, Action: StoppingSiteContainers, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:24:39.8457465Z Site: chedck-studio stopped.
+2026-09-22T02:25:00.4913767Z State: Stopping, Action: StoppingSite, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site started at 09/22/2026 02:14:32 (UTC), DetailsLevel: INFO
+2026-09-22T02:25:00.4972925Z State: Stopping, Action: StoppingSiteContainers, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site started at 09/22/2026 02:14:32 (UTC), DetailsLevel: INFO
+2026-09-22T02:25:00.4974485Z Container is terminating. Grace period: 5 seconds.
+2026-09-22T02:25:00.5441927Z Stop and delete container. Retry count = 0
+2026-09-22T02:25:00.5442800Z Stopping container: fa1d95412745_chedck-studio.
+2026-09-22T02:25:05.7842524Z Deleting container: fa1d95412745_chedck-studio. Retry count = 0
+2026-09-22T02:25:06.6521428Z Container spec TerminationMessagePolicy  path 
+2026-09-22T02:25:06.6522558Z Container is terminated. Total time elapsed: 6154 ms.
+2026-09-22T02:25:06.6529280Z Site: chedck-studio stopped.
+2026-09-22T02:24:39.8646244Z State: Stopping, Action: UnmountingVolumes, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:24:40.0637476Z State: Stopping, Action: StoppingSiteNetworks, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:24:40.1788409Z State: Stopped, Action: None, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Site stopped at 09/22/2026 02:24:40 (UTC), DetailsLevel: ERR
+2026-09-22T02:24:40.4336636Z State: Stopped, Action: None, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Site stopped at 09/22/2026 02:24:40 (UTC), DetailsLevel: ERR
+2026-09-22T02:27:31.6741122Z State: Starting, Action: EstablishingSiteNetworks, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Site stopped at 09/22/2026 02:24:40 (UTC), DetailsLevel: ERR
+2026-09-22T02:27:32.2585556Z State: Starting, Action: StartingSiteContainers, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Site stopped at 09/22/2026 02:24:40 (UTC), DetailsLevel: ERR
+2026-09-22T02:27:32.2590340Z Container start method called.
+2026-09-22T02:27:32.2603765Z State: Starting, Action: PullingImage, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Pulling image 10.1.0.6:13209/appsvc/python:3.12_20260910.3.tuxprod for chedck-studio., DetailsLevel: INFO
+2026-09-22T02:27:32.2604680Z Establishing network.
+2026-09-22T02:27:32.2605573Z Pulling image: appsvc/python:3.12_20260910.3.tuxprod.
+2026-09-22T02:27:32.4647072Z Container is starting.
+2026-09-22T02:27:32.4649527Z State: Starting, Action: MountingVolumes, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Mounting volumes for chedck-studio., DetailsLevel: INFO
+2026-09-22T02:27:32.4650207Z Establishing user namespace if not established already.
+2026-09-22T02:27:32.4651046Z Establishing network if not established already.
+2026-09-22T02:27:32.4651701Z Mounting volumes.
+2026-09-22T02:27:32.4668226Z Nested mountpoint 
+2026-09-22T02:27:32.4805460Z Nested mountpoint volatile/logs
+2026-09-22T02:27:32.4955243Z Nested mountpoint 
+2026-09-22T02:27:32.4960612Z Nested mountpoint 
+2026-09-22T02:27:32.4969590Z Nested mountpoint 
+2026-09-22T02:27:32.5037990Z Nested mountpoint 
+2026-09-22T02:27:32.6584187Z State: Starting, Action: CreatingContainer, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Finished pulling container image and mounting volumes for chedck-studio. Allocatinng the rest of the container resources to finish container creation., DetailsLevel: INFO
+2026-09-22T02:27:32.6585019Z Creating container.
+2026-09-22T02:27:32.6620119Z Creating pipes for streaming container io.
+2026-09-22T02:27:32.6620883Z Creating stdout named pipe at /podr/container/pipe/8b18f1b93653_chedck-studio/stdout_f0ce85ca89c04e3d8a19d089849d59a2.
+2026-09-22T02:27:32.6628277Z Successfully created stdout named pipe at: /podr/container/pipe/8b18f1b93653_chedck-studio/stdout_f0ce85ca89c04e3d8a19d089849d59a2.
+2026-09-22T02:27:32.6628916Z Opening named pipe /podr/container/pipe/8b18f1b93653_chedck-studio/stdout_f0ce85ca89c04e3d8a19d089849d59a2 for reading in non-blocking mode.
+2026-09-22T02:27:32.6629697Z Successfully opened named pipe: /podr/container/pipe/8b18f1b93653_chedck-studio/stdout_f0ce85ca89c04e3d8a19d089849d59a2.
+2026-09-22T02:27:32.6631925Z Successfully removed non-blocking flag from /podr/container/pipe/8b18f1b93653_chedck-studio/stdout_f0ce85ca89c04e3d8a19d089849d59a2.
+2026-09-22T02:27:32.6633162Z Creating stderr named pipe at /podr/container/pipe/8b18f1b93653_chedck-studio/stderr_105bf8e9dc4344bd9f4d1dda578d43e0.
+2026-09-22T02:27:32.6634331Z Successfully created stderr named pipe at: /podr/container/pipe/8b18f1b93653_chedck-studio/stderr_105bf8e9dc4344bd9f4d1dda578d43e0.
+2026-09-22T02:27:32.6634873Z Opening named pipe /podr/container/pipe/8b18f1b93653_chedck-studio/stderr_105bf8e9dc4344bd9f4d1dda578d43e0 for reading in non-blocking mode.
+2026-09-22T02:27:32.6635552Z Successfully opened named pipe: /podr/container/pipe/8b18f1b93653_chedck-studio/stderr_105bf8e9dc4344bd9f4d1dda578d43e0.
+2026-09-22T02:27:32.6636143Z Successfully removed non-blocking flag from /podr/container/pipe/8b18f1b93653_chedck-studio/stderr_105bf8e9dc4344bd9f4d1dda578d43e0.
+2026-09-22T02:27:32.6637190Z Creating container with image: appsvc/python:3.12_20260910.3.tuxprod from registry: 10.1.0.6:13209 and fully qualified image name: 10.1.0.6:13209/appsvc/python:3.12_20260910.3.tuxprod
+2026-09-22T02:27:32.9696497Z Starting container: 8b18f1b93653_chedck-studio.
+2026-09-22T02:27:33.0197280Z Starting watchers and probes.
+2026-09-22T02:27:33.0212022Z Starting metrics collection.
+2026-09-22T02:27:33.0213717Z Container is running.
+2026-09-22T02:27:33.0215824Z State: Starting, Action: CreatingContainer, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Container chedck-studio successfully created and is running., DetailsLevel: INFO
+2026-09-22T02:27:33.1184942Z Container start method finished after 859 ms.
+2026-09-22T02:27:33.1190191Z State: Starting, Action: InitiatingSiteWarmUpProbe, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Container chedck-studio successfully created and is running., DetailsLevel: INFO
+2026-09-22T02:27:33.1190496Z State: Starting, Action: WaitingForSiteWarmUpProbeSuccess, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Pinging warmup path to ensure container is ready to receive requests., DetailsLevel: INFO
+2026-09-22T02:27:47.4865379Z Container has finished running with exit code: 3.
+2026-09-22T02:27:47.4866254Z Container is terminating. Grace period: 5 seconds.
+2026-09-22T02:27:47.4887905Z Stop and delete container. Retry count = 0
+2026-09-22T02:27:47.4890189Z Stopping container: 8b18f1b93653_chedck-studio.
+2026-09-22T02:27:47.5340105Z Deleting container: 8b18f1b93653_chedck-studio. Retry count = 0
+2026-09-22T02:27:47.9887224Z Container spec TerminationMessagePolicy  path 
+2026-09-22T02:27:47.9892595Z Container is terminated. Total time elapsed: 502 ms.
+2026-09-22T02:27:47.9893263Z Site container: chedck-studio terminated during site startup.
+2026-09-22T02:27:47.9894308Z State: Stopping, Action: CancellingStartup, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:24:39, LastErrorDetails: Container exited with exit code 3 during startup after 16.0s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:27:47.9920784Z Site startup probe failed after 14.8719417 seconds.
+2026-09-22T02:27:48.1167161Z State: Stopping, Action: CancellingStartup, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:27:48, LastErrorDetails: Container exited with exit code 3 during startup after 15.0s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:27:48.1176857Z Failed to start site. Revert by stopping site.
+2026-09-22T02:27:48.1177864Z State: Stopping, Action: StoppingSite, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:27:48, LastErrorDetails: Container exited with exit code 3 during startup after 15.0s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:27:48.1180072Z State: Stopping, Action: StoppingSiteContainers, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:27:48, LastErrorDetails: Container exited with exit code 3 during startup after 15.0s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:27:48.1180265Z Site: chedck-studio stopped.
+2026-09-22T02:30:02.7654443Z State: Starting, Action: EstablishingSiteNetworks, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:27:48, LastErrorDetails: Container exited with exit code 3 during startup after 15.0s. Please inspect your container logs for more details., Details: Site stopped at 09/22/2026 02:27:48 (UTC), DetailsLevel: WARN
+2026-09-22T02:30:03.3356898Z State: Starting, Action: StartingSiteContainers, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:27:48, LastErrorDetails: Container exited with exit code 3 during startup after 15.0s. Please inspect your container logs for more details., Details: Site stopped at 09/22/2026 02:27:48 (UTC), DetailsLevel: WARN
+2026-09-22T02:30:03.3366185Z Container start method called.
+2026-09-22T02:30:03.3368505Z State: Starting, Action: PullingImage, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:27:48, LastErrorDetails: Container exited with exit code 3 during startup after 15.0s. Please inspect your container logs for more details., Details: Pulling image 10.1.0.5:13209/appsvc/python:3.12_20260910.3.tuxprod for chedck-studio., DetailsLevel: INFO
+2026-09-22T02:30:03.3373641Z Establishing network.
+2026-09-22T02:30:03.3421786Z Pulling image: appsvc/python:3.12_20260910.3.tuxprod.
+2026-09-22T02:30:03.4996783Z Container is starting.
+2026-09-22T02:30:03.4998049Z State: Starting, Action: MountingVolumes, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:27:48, LastErrorDetails: Container exited with exit code 3 during startup after 15.0s. Please inspect your container logs for more details., Details: Mounting volumes for chedck-studio., DetailsLevel: INFO
+2026-09-22T02:30:03.4998805Z Establishing user namespace if not established already.
+2026-09-22T02:30:03.4999402Z Establishing network if not established already.
+2026-09-22T02:30:03.5000036Z Mounting volumes.
+2026-09-22T02:30:03.5001503Z Nested mountpoint 
+2026-09-22T02:30:03.5021163Z Nested mountpoint volatile/logs
+2026-09-22T02:30:03.5077860Z Nested mountpoint 
+2026-09-22T02:30:03.5083514Z Nested mountpoint 
+2026-09-22T02:30:03.5089535Z Nested mountpoint 
+2026-09-22T02:30:03.5185702Z Nested mountpoint 
+2026-09-22T02:30:03.7214582Z State: Starting, Action: CreatingContainer, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:27:48, LastErrorDetails: Container exited with exit code 3 during startup after 15.0s. Please inspect your container logs for more details., Details: Finished pulling container image and mounting volumes for chedck-studio. Allocatinng the rest of the container resources to finish container creation., DetailsLevel: INFO
+2026-09-22T02:30:03.7215622Z Creating container.
+2026-09-22T02:30:03.7216670Z Creating pipes for streaming container io.
+2026-09-22T02:30:03.7217646Z Creating stdout named pipe at /podr/container/pipe/13dd518c2dec_chedck-studio/stdout_d82e5b8479ba432ea4985c52cb83b6a2.
+2026-09-22T02:30:03.7219561Z Successfully created stdout named pipe at: /podr/container/pipe/13dd518c2dec_chedck-studio/stdout_d82e5b8479ba432ea4985c52cb83b6a2.
+2026-09-22T02:30:03.7220889Z Opening named pipe /podr/container/pipe/13dd518c2dec_chedck-studio/stdout_d82e5b8479ba432ea4985c52cb83b6a2 for reading in non-blocking mode.
+2026-09-22T02:30:03.7221991Z Successfully opened named pipe: /podr/container/pipe/13dd518c2dec_chedck-studio/stdout_d82e5b8479ba432ea4985c52cb83b6a2.
+2026-09-22T02:30:03.7222710Z Successfully removed non-blocking flag from /podr/container/pipe/13dd518c2dec_chedck-studio/stdout_d82e5b8479ba432ea4985c52cb83b6a2.
+2026-09-22T02:30:03.7225041Z Creating stderr named pipe at /podr/container/pipe/13dd518c2dec_chedck-studio/stderr_afdc3d11b95b4f05b31ae6a3551e69ba.
+2026-09-22T02:30:03.7227592Z Successfully created stderr named pipe at: /podr/container/pipe/13dd518c2dec_chedck-studio/stderr_afdc3d11b95b4f05b31ae6a3551e69ba.
+2026-09-22T02:30:03.7228290Z Opening named pipe /podr/container/pipe/13dd518c2dec_chedck-studio/stderr_afdc3d11b95b4f05b31ae6a3551e69ba for reading in non-blocking mode.
+2026-09-22T02:30:03.7228998Z Successfully opened named pipe: /podr/container/pipe/13dd518c2dec_chedck-studio/stderr_afdc3d11b95b4f05b31ae6a3551e69ba.
+2026-09-22T02:30:03.7229553Z Successfully removed non-blocking flag from /podr/container/pipe/13dd518c2dec_chedck-studio/stderr_afdc3d11b95b4f05b31ae6a3551e69ba.
+2026-09-22T02:30:03.7271652Z Creating container with image: appsvc/python:3.12_20260910.3.tuxprod from registry: 10.1.0.5:13209 and fully qualified image name: 10.1.0.5:13209/appsvc/python:3.12_20260910.3.tuxprod
+2026-09-22T02:30:03.9596284Z Starting container: 13dd518c2dec_chedck-studio.
+2026-09-22T02:30:04.0091386Z Starting watchers and probes.
+2026-09-22T02:30:04.0094681Z Starting metrics collection.
+2026-09-22T02:30:04.0095683Z Container is running.
+2026-09-22T02:30:04.0096462Z State: Starting, Action: CreatingContainer, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:27:48, LastErrorDetails: Container exited with exit code 3 during startup after 15.0s. Please inspect your container logs for more details., Details: Container chedck-studio successfully created and is running., DetailsLevel: INFO
+2026-09-22T02:30:04.0485581Z Container start method finished after 711 ms.
+2026-09-22T02:30:04.0526765Z State: Starting, Action: InitiatingSiteWarmUpProbe, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:27:48, LastErrorDetails: Container exited with exit code 3 during startup after 15.0s. Please inspect your container logs for more details., Details: Container chedck-studio successfully created and is running., DetailsLevel: INFO
+2026-09-22T02:30:04.0527061Z State: Starting, Action: WaitingForSiteWarmUpProbeSuccess, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:27:48, LastErrorDetails: Container exited with exit code 3 during startup after 15.0s. Please inspect your container logs for more details., Details: Pinging warmup path to ensure container is ready to receive requests., DetailsLevel: INFO
+2026-09-22T02:30:17.9111918Z Container has finished running with exit code: 2.
+2026-09-22T02:30:17.9112835Z Container is terminating. Grace period: 5 seconds.
+2026-09-22T02:30:17.9133251Z Stop and delete container. Retry count = 0
+2026-09-22T02:30:17.9135150Z Stopping container: 13dd518c2dec_chedck-studio.
+2026-09-22T02:30:18.1460087Z Deleting container: 13dd518c2dec_chedck-studio. Retry count = 0
+2026-09-22T02:30:18.5148101Z Container spec TerminationMessagePolicy  path 
+2026-09-22T02:30:18.5153177Z Container is terminated. Total time elapsed: 603 ms.
+2026-09-22T02:30:18.5159645Z Site container: chedck-studio terminated during site startup.
+2026-09-22T02:30:18.5160959Z State: Stopping, Action: CancellingStartup, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:27:48, LastErrorDetails: Container exited with exit code 3 during startup after 15.0s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:30:18.5189938Z Site startup probe failed after 14.4652616 seconds.
+2026-09-22T02:30:18.6035589Z State: Stopping, Action: CancellingStartup, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:30:18, LastErrorDetails: Container exited with exit code 2 during startup after 14.5s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:30:18.6050134Z Failed to start site. Revert by stopping site.
+2026-09-22T02:30:18.6050984Z State: Stopping, Action: StoppingSite, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:30:18, LastErrorDetails: Container exited with exit code 2 during startup after 14.5s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:30:18.6053521Z State: Stopping, Action: StoppingSiteContainers, LastError: ContainerStartupFailure, LastErrorTimestamp: 09/22/2026 02:30:18, LastErrorDetails: Container exited with exit code 2 during startup after 14.5s. Please inspect your container logs for more details., Details: Site container: chedck-studio terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-09-22T02:30:18.6053699Z Site: chedck-studio stopped.

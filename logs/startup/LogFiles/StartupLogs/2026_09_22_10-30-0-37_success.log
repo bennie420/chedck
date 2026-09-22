@@ -1,0 +1,101 @@
+========== New Cold Start Attempt (2026-09-22T02:14:10.5132465+00:00) ==========
+2026-09-22T02:14:10.5132465+00:00 ContainerStatus: State: Starting, Action: EstablishingSiteNetworks, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-09-22T02:14:11.3001913+00:00 ContainerStatus: State: Starting, Action: StartingSiteContainers, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-09-22T02:14:11.3003479+00:00 ContainerStatus: Container start method called.
+2026-09-22T02:14:11.3038031+00:00 ContainerStatus: State: Starting, Action: PullingImage, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Pulling image 10.1.0.5:13209/appsvc/python:3.12_20260910.3.tuxprod for chedck-studio., DetailsLevel: INFO
+2026-09-22T02:14:11.3041788+00:00 ContainerStatus: Establishing network.
+2026-09-22T02:14:11.3044560+00:00 ContainerStatus: Pulling image: appsvc/python:3.12_20260910.3.tuxprod.
+2026-09-22T02:14:11.6611080+00:00 ContainerStatus: Image appsvc/python:3.12_20260910.3.tuxprod is pulled from registry 10.1.0.5:13209
+2026-09-22T02:14:11.6612912+00:00 ContainerStatus: Container is starting.
+2026-09-22T02:14:11.6614106+00:00 ContainerStatus: State: Starting, Action: MountingVolumes, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Mounting volumes for chedck-studio., DetailsLevel: INFO
+2026-09-22T02:14:11.6616233+00:00 ContainerStatus: Establishing user namespace if not established already.
+2026-09-22T02:14:11.6617250+00:00 ContainerStatus: Establishing network if not established already.
+2026-09-22T02:14:11.6618544+00:00 ContainerStatus: Mounting volumes.
+2026-09-22T02:14:11.6620689+00:00 ContainerStatus: Nested mountpoint 
+2026-09-22T02:14:11.6741227+00:00 ContainerStatus: Nested mountpoint volatile/logs
+2026-09-22T02:14:11.7160010+00:00 ContainerStatus: Nested mountpoint 
+2026-09-22T02:14:11.7165479+00:00 ContainerStatus: Nested mountpoint 
+2026-09-22T02:14:11.7207224+00:00 ContainerStatus: Nested mountpoint 
+2026-09-22T02:14:11.7285629+00:00 ContainerStatus: Nested mountpoint 
+2026-09-22T02:14:11.9101376+00:00 ContainerStatus: State: Starting, Action: CreatingContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Finished pulling container image and mounting volumes for chedck-studio. Allocatinng the rest of the container resources to finish container creation., DetailsLevel: INFO
+2026-09-22T02:14:11.9102084+00:00 ContainerStatus: Creating container.
+2026-09-22T02:14:11.9106652+00:00 ContainerStatus: Creating pipes for streaming container io.
+2026-09-22T02:14:11.9107329+00:00 ContainerStatus: Creating stdout named pipe at /podr/container/pipe/fa1d95412745_chedck-studio/stdout_cd1794db41d342b6bb7f79579c8259cd.
+2026-09-22T02:14:11.9125903+00:00 ContainerStatus: Successfully created stdout named pipe at: /podr/container/pipe/fa1d95412745_chedck-studio/stdout_cd1794db41d342b6bb7f79579c8259cd.
+2026-09-22T02:14:11.9137137+00:00 ContainerStatus: Opening named pipe /podr/container/pipe/fa1d95412745_chedck-studio/stdout_cd1794db41d342b6bb7f79579c8259cd for reading in non-blocking mode.
+2026-09-22T02:14:11.9139531+00:00 ContainerStatus: Successfully opened named pipe: /podr/container/pipe/fa1d95412745_chedck-studio/stdout_cd1794db41d342b6bb7f79579c8259cd.
+2026-09-22T02:14:11.9141704+00:00 ContainerStatus: Successfully removed non-blocking flag from /podr/container/pipe/fa1d95412745_chedck-studio/stdout_cd1794db41d342b6bb7f79579c8259cd.
+2026-09-22T02:14:11.9143043+00:00 ContainerStatus: Creating stderr named pipe at /podr/container/pipe/fa1d95412745_chedck-studio/stderr_37c00a44dd0845ec96f6495ea9bfb787.
+2026-09-22T02:14:11.9144300+00:00 ContainerStatus: Successfully created stderr named pipe at: /podr/container/pipe/fa1d95412745_chedck-studio/stderr_37c00a44dd0845ec96f6495ea9bfb787.
+2026-09-22T02:14:11.9144858+00:00 ContainerStatus: Opening named pipe /podr/container/pipe/fa1d95412745_chedck-studio/stderr_37c00a44dd0845ec96f6495ea9bfb787 for reading in non-blocking mode.
+2026-09-22T02:14:11.9145627+00:00 ContainerStatus: Successfully opened named pipe: /podr/container/pipe/fa1d95412745_chedck-studio/stderr_37c00a44dd0845ec96f6495ea9bfb787.
+2026-09-22T02:14:11.9146233+00:00 ContainerStatus: Successfully removed non-blocking flag from /podr/container/pipe/fa1d95412745_chedck-studio/stderr_37c00a44dd0845ec96f6495ea9bfb787.
+2026-09-22T02:14:11.9147634+00:00 ContainerStatus: Creating container with image: appsvc/python:3.12_20260910.3.tuxprod from registry: 10.1.0.5:13209 and fully qualified image name: 10.1.0.5:13209/appsvc/python:3.12_20260910.3.tuxprod
+2026-09-22T02:14:12.4663258+00:00 ContainerStatus: Starting container: fa1d95412745_chedck-studio.
+2026-09-22T02:14:12.4846082+00:00 ContainerStatus: Starting watchers and probes.
+2026-09-22T02:14:12.4849807+00:00 ContainerStatus: Starting metrics collection.
+2026-09-22T02:14:12.4851281+00:00 ContainerStatus: Container is running.
+2026-09-22T02:14:12.4852331+00:00 ContainerStatus: State: Starting, Action: CreatingContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Container chedck-studio successfully created and is running., DetailsLevel: INFO
+2026-09-22T02:14:12.6000442+00:00 ContainerStatus: Container start method finished after 1299 ms.
+2026-09-22T02:14:12.6004116+00:00 ContainerStatus: State: Starting, Action: InitiatingSiteWarmUpProbe, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Container chedck-studio successfully created and is running., DetailsLevel: INFO
+2026-09-22T02:14:12.6077891+00:00 ContainerStatus: State: Starting, Action: WaitingForSiteWarmUpProbeSuccess, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Pinging warmup path to ensure container is ready to receive requests., DetailsLevel: INFO
+2026-09-22T02:14:12.7131625+00:00 ContainerStream:    _____                               
+2026-09-22T02:14:12.7136444+00:00 ContainerStream:   /  _  \ __________ _________   ____  
+2026-09-22T02:14:12.7136520+00:00 ContainerStream:  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2026-09-22T02:14:12.7136560+00:00 ContainerStream: /    |    \/    /|  |  /|  | \/\  ___/ 
+2026-09-22T02:14:12.7136594+00:00 ContainerStream: \____|__  /_____ \____/ |__|    \___  >
+2026-09-22T02:14:12.7136639+00:00 ContainerStream:         \/      \/                  \/ 
+2026-09-22T02:14:12.7136720+00:00 ContainerStream: A P P   S E R V I C E   O N   L I N U X
+2026-09-22T02:14:12.7136754+00:00 ContainerStream: 
+2026-09-22T02:14:12.7136795+00:00 ContainerStream: Documentation     : https://aka.ms/webapp-linux
+2026-09-22T02:14:12.7136873+00:00 ContainerStream: Python quickstart : https://aka.ms/python-qs
+2026-09-22T02:14:12.7136909+00:00 ContainerStream: Python version    : 3.12.13
+2026-09-22T02:14:12.7136944+00:00 ContainerStream: Instance name     : 10-30-0-37
+2026-09-22T02:14:12.7137000+00:00 ContainerStream: Instance id       : 739b989d3f5c405d4d94f37c15ddfbc3b1ee76fe66380df1a2f4e63ded4100a2
+2026-09-22T02:14:12.7137044+00:00 ContainerStream: 
+2026-09-22T02:14:12.7137105+00:00 ContainerStream: App port          : 8000
+2026-09-22T02:14:12.7137141+00:00 ContainerStream: Port selected by  : Default for this image
+2026-09-22T02:14:12.7137179+00:00 ContainerStream: (Learn more about the PORT appsetting https://aka.ms/webapp-python-settings)
+2026-09-22T02:14:12.7137217+00:00 ContainerStream: 
+2026-09-22T02:14:12.7137252+00:00 ContainerStream: Note: Any data outside '/home' is not persisted
+2026-09-22T02:14:12.7137284+00:00 ContainerStream: 
+2026-09-22T02:14:12.7137355+00:00 ContainerStream: ────────────────────────────────────────────────────────────────
+2026-09-22T02:14:12.7137396+00:00 ContainerStream:  Run 'apphelp' for available commands and aliases.
+2026-09-22T02:14:12.7137430+00:00 ContainerStream:  Run 'install-nettools' to install networking utilities.
+2026-09-22T02:14:12.7137472+00:00 ContainerStream: ────────────────────────────────────────────────────────────────
+2026-09-22T02:14:14.4211442+00:00 ContainerStream: Starting OpenBSD Secure Shell server: sshd.
+2026-09-22T02:14:14.4285792+00:00 ContainerStream: WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2026-09-22T02:14:14.4673122+00:00 ContainerStream: Updating certificates in /etc/ssl/certs...
+2026-09-22T02:14:20.0270794+00:00 ContainerStream: rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_ECC_Root_CA_2022.pem
+2026-09-22T02:14:20.0283768+00:00 ContainerStream: rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_RSA_Root_CA_2022.pem
+2026-09-22T02:14:20.1073707+00:00 ContainerStream: rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2026-09-22T02:14:20.1401750+00:00 ContainerStream: 4 added, 0 removed; done.
+2026-09-22T02:14:20.1415467+00:00 ContainerStream: Running hooks in /etc/ca-certificates/update.d...
+2026-09-22T02:14:20.1502965+00:00 ContainerStream: done.
+2026-09-22T02:14:20.1641563+00:00 ContainerStream: CA certificates copied and updated successfully.
+2026-09-22T02:14:20.9224847+00:00 ContainerStream: Site's appCommandLine: python -m uvicorn api_server:app --host 0.0.0.0 --port 8000 --app-dir src
+2026-09-22T02:14:21.8216105+00:00 ContainerStream: Starting periodic command scheduler: cron.
+2026-09-22T02:14:21.8225999+00:00 ContainerStream: Launching oryx with: create-script -appPath /home/site/wwwroot -output /opt/startup/startup.sh -virtualEnvName antenv -defaultApp /opt/defaultsite -userStartupCommand 'python -m uvicorn api_server:app --host 0.0.0.0 --port 8000 --app-dir src'
+2026-09-22T02:14:21.9935224+00:00 ContainerStream: Found build manifest file at '/home/site/wwwroot/oryx-manifest.toml'. Deserializing it...
+2026-09-22T02:14:21.9965686+00:00 ContainerStream: Build Operation ID: 9ee9a0a6da91c3f9
+2026-09-22T02:14:21.9976188+00:00 ContainerStream: Output is compressed. Extracting it...
+2026-09-22T02:14:21.9976612+00:00 ContainerStream: Oryx Version: 0.2.20260710.1, Commit: 079b5b6294eb97d462d8f96bfa3243e9b85251da, ReleaseTagName: 20260710.1
+2026-09-22T02:14:21.9987621+00:00 ContainerStream: Found zstd-compressed tarball.
+2026-09-22T02:14:21.9994925+00:00 ContainerStream: Extracting '/home/site/wwwroot/output.tar.zst' to directory '/tmp/8df184f0bdffeb6'...
+2026-09-22T02:14:21.9995058+00:00 ContainerStream: Using zstd for decompression of file: /home/site/wwwroot/output.tar.zst
+2026-09-22T02:14:25.8611721+00:00 ContainerStream: zstd tar Successfully extracted '/home/site/wwwroot/output.tar.zst' to '/tmp/8df184f0bdffeb6'
+2026-09-22T02:14:25.8612139+00:00 ContainerStream: App path is set to '/tmp/8df184f0bdffeb6'
+2026-09-22T02:14:26.0865077+00:00 ContainerStream: Writing output script to '/opt/startup/startup.sh'
+2026-09-22T02:14:27.5416397+00:00 ContainerStream: Using packages from virtual environment antenv located at /tmp/8df184f0bdffeb6/antenv.
+2026-09-22T02:14:27.5416921+00:00 ContainerStream: Updated PYTHONPATH to '/home/site/wwwroot/src:/opt/startup/app_logs:/tmp/8df184f0bdffeb6/antenv/lib/python3.12/site-packages'
+2026-09-22T02:14:30.8444065+00:00 ContainerStream: INFO:     Started server process [1886]
+2026-09-22T02:14:30.8444604+00:00 ContainerStream: INFO:     Waiting for application startup.
+2026-09-22T02:14:30.8444652+00:00 ContainerStream: INFO:     Application startup complete.
+2026-09-22T02:14:30.8518974+00:00 ContainerStream: INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-09-22T02:14:32.0185312+00:00 ContainerStream: INFO:     169.254.129.1:50089 - "GET /robots933456.txt HTTP/1.1" 404 Not Found
+2026-09-22T02:14:32.0427747+00:00 ContainerStatus: Site startup probe succeeded after 19.3919153 seconds.
+2026-09-22T02:14:32.2810005+00:00 ContainerStatus: State: Starting, Action: WarmUpProbeSucceeded, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site startup probe succeeded after 19.3919153 seconds., DetailsLevel: INFO
+2026-09-22T02:14:32.4870180+00:00 ContainerStatus: Site is running with deployment version: 290b4600-9a5e-47ea-95a8-bc2ff403f9dd
+2026-09-22T02:14:32.4921668+00:00 ContainerStatus: Site started.
+2026-09-22T02:14:32.4929667+00:00 ContainerStatus: State: Started, Action: None, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site started at 09/22/2026 02:14:32 (UTC), DetailsLevel: INFO
+2026-09-22T02:14:32.5427591+00:00 ContainerStatus: Site is running with patch version PYTHON-3.12.13

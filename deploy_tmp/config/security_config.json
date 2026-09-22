@@ -1,0 +1,21 @@
+{
+  "_comment": "Security and control configuration. See buildspec.md §11.",
+
+  "production_lock": "TEST",
+  "_comment_lock":   "Set to 'LIVE' (or set env var PRODUCTION_LOCK=LIVE) to enable actual printing. Do NOT set to LIVE until the bank has approved your 20-sample test deck.",
+
+  "signature_auto_threshold_cents": 500000,
+  "_comment_threshold": "Checks for amounts AT OR BELOW this value (in cents) receive the stored digital signature automatically. Default: $5,000.00. Set to 0 to always require wet signature.",
+
+  "dual_control_mode": false,
+  "_comment_dual":   "If true, a second operator ID must approve every print run before the signature is released. If false (one-person shop), the hard-cap above applies instead.",
+
+  "max_blank_stock_years": 1,
+  "_comment_stock":  "Do not keep more than this many years of blank stock on hand. See buildspec.md §3.",
+
+  "void_shred_required": true,
+  "_comment_void":   "If true, spoiled/voided checks must be shredded and logged. P-4 cross-cut shredder minimum.",
+
+  "alert_unprotected_printed_checks": true,
+  "_comment_alert":  "Alert on any 'printed' check record with a null positive_pay_export_id."
+}

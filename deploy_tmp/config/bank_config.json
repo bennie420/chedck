@@ -1,0 +1,39 @@
+{
+  "_comment": "Bank MICR field configuration per X9.100-160-1 / X9.100-161. Values below are Chase defaults. Replace with values from your bank's official MICR Document Specification form before live printing.",
+
+  "bank_name": "JPMorgan Chase Bank, N.A.",
+  "bank_city_state": "Columbus, OH",
+
+  "micr_fields": {
+    "_comment_positions": "Positions 1-65, position 1 = leading/right edge. See buildspec.md §4.2.",
+    "amount_field":          { "start": 1,  "end": 12 },
+    "amount_separator":      { "position": 13 },
+    "on_us_field":           { "start": 14, "end": 31 },
+    "on_us_separator":       { "position": 32 },
+    "routing_field":         { "start": 33, "end": 43 },
+    "epc_field":             { "position": 44, "use": false, "value": "" },
+    "auxiliary_on_us":       { "start": 45, "end": 65,
+                               "_chase_note": "Chase uses 46-55 with last serial digit in box 46; adjust per your spec form.",
+                               "serial_rightmost_position": 46,
+                               "serial_leftmost_position":  55 }
+  },
+
+  "positive_pay": {
+    "format": "csv",
+    "_comment_format": "Supported: 'csv'. Add 'xml' or 'nacha' once bank confirms format.",
+    "fields_order": ["account_number", "check_number", "issue_date", "amount", "payee_name", "void_flag"],
+    "date_format": "%m/%d/%Y",
+    "amount_format": "dollars_and_cents"
+  },
+
+  "reconciliation": {
+    "format": "csv",
+    "_comment_format": "Supported: 'csv', 'bai2'. Set to match your bank's daily statement delivery.",
+    "csv_columns": {
+      "serial":        "CheckNumber",
+      "cleared_date":  "PostDate",
+      "amount":        "Amount",
+      "payee":         "Description"
+    }
+  }
+}
