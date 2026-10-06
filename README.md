@@ -1,5 +1,6 @@
                                                                              # chedck — In-House Check Printing System
 [![Sponsorship Badge](https://readmepay.com/badge/bennie420/chedck.svg)](https://readmepay.com/click/active/53)
+
 **OmniLeadFeeder · Build v1.0 · September 2026**
 
 A self-contained, production-quality check printing system built to the
