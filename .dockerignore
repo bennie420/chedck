@@ -24,3 +24,10 @@ output/*.pdf
 output/*.png
 *.pdf
 *.png
+*.zip
+logs/
+logs2/
+logs_latest/
+deploy_tmp/
+deploy.zip
+deploy_flat.zip

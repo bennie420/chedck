@@ -151,3 +151,57 @@ class TestRenderCheck:
         result = render_check(SAMPLE_CHECK, BANK_CONFIG, ACCOUNT_CONFIG, pdf_path,
                               draw_signature=False)
         assert result.exists()
+
+    def test_render_with_payee_address(self, tmp_path):
+        """Verify check rendering succeeds when payee_address and payee_city_state_zip are provided."""
+        pdf_path = tmp_path / "check_with_addr.pdf"
+        check_with_addr = {
+            **SAMPLE_CHECK,
+            "payee_address": "456 Corporate Blvd Suite 100",
+            "payee_city_state_zip": "Austin, TX 78701",
+        }
+        result = render_check(check_with_addr, BANK_CONFIG, ACCOUNT_CONFIG, pdf_path)
+        assert result.exists()
+        assert pdf_path.stat().st_size > 0
+
+    def test_render_standard_voucher_sheet_with_payee_address(self, tmp_path):
+        """Verify voucher sheet rendering succeeds with payee address on voucher stub."""
+        pdf_path = tmp_path / "voucher_sheet_addr.pdf"
+        check_with_addr = {
+            **SAMPLE_CHECK,
+            "page_format": "voucher_sheet",
+            "payee_address": "123 Main St",
+            "payee_city_state_zip": "Dallas, TX 75201",
+        }
+        result = render_check(check_with_addr, BANK_CONFIG, ACCOUNT_CONFIG, pdf_path, page_format="voucher_sheet")
+        assert result.exists()
+        assert pdf_path.stat().st_size > 0
+
+    def test_render_personal_check_dimensions(self, tmp_path):
+        """Verify personal check page dimensions are exactly 6.0 x 2 3/5 inches (432 x 187.2 pt)."""
+        pdf_path = tmp_path / "personal_check.pdf"
+        personal_check = {
+            **SAMPLE_CHECK,
+            "layout": "personal",
+        }
+        result = render_check(personal_check, BANK_CONFIG, {}, pdf_path, layout="personal")
+        assert result.exists()
+        w_pt, h_pt = _read_pdf_pagesize(pdf_path)
+        expected_w = 6.0 * 72  # = 432.0
+        expected_h = 2.60 * 72  # = 187.2 (2 3/5 in)
+        assert abs(w_pt - expected_w) < 0.1
+        assert abs(h_pt - expected_h) < 0.1
+
+    def test_render_personal_voucher_sheet(self, tmp_path):
+        """Verify personal voucher sheet page dimensions are 8.5 x 11.0 inches."""
+        pdf_path = tmp_path / "personal_voucher.pdf"
+        personal_check = {
+            **SAMPLE_CHECK,
+            "layout": "personal",
+            "page_format": "voucher_sheet",
+        }
+        result = render_check(personal_check, BANK_CONFIG, {}, pdf_path, layout="personal", page_format="voucher_sheet")
+        assert result.exists()
+        w_pt, h_pt = _read_pdf_pagesize(pdf_path)
+        assert abs(w_pt - 8.5 * 72) < 0.1
+        assert abs(h_pt - 11.0 * 72) < 0.1

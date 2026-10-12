@@ -166,7 +166,6 @@ class TestRemittanceRenderer:
         assert len(line) == 65
         warnings = validate_code_line(line)
         assert len(warnings) == 0
-        # Check that routing digits and serial digits are present in scanner order (R-to-L)
-        scanner_order = line[::-1]
-        assert "011900445" in scanner_order
-        assert "0039254225" in scanner_order
+        # Check that routing digits and serial digits are present in forward print order
+        assert "011900445" in line
+        assert "0039254225" in line

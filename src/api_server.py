@@ -145,6 +145,10 @@ class PreviewRequest(BaseModel):
     account_id: Optional[str] = "ACC-001"
     check_number: Optional[int] = None
     payee: str = "BRANDON BACH"
+    payee_address: Optional[str] = None
+    payee_city_state_zip: Optional[str] = None
+    routing_number: Optional[str] = None
+    account_number: Optional[str] = None
     amount_dollars: float = 5000.00
     issue_date: Optional[str] = None
     memo: Optional[str] = "Medical Payments to Others coverage"
@@ -172,6 +176,10 @@ class PrintRequest(BaseModel):
     account_id: Optional[str] = "ACC-001"
     check_number: Optional[int] = None
     payee: str
+    payee_address: Optional[str] = None
+    payee_city_state_zip: Optional[str] = None
+    routing_number: Optional[str] = None
+    account_number: Optional[str] = None
     amount_dollars: float
     issue_date: Optional[str] = None
     memo: Optional[str] = ""
@@ -432,6 +440,12 @@ def preview_check(req: PreviewRequest):
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+    # Apply routing / account overrides
+    if req.routing_number:
+        account_cfg["routing_number"] = req.routing_number
+    if req.account_number:
+        account_cfg["account_number"] = req.account_number
+
     checks_db_path = DB_DIR / "checks.db"
     if not checks_db_path.exists():
         sequence.init_db(checks_db_path)
@@ -455,16 +469,18 @@ def preview_check(req: PreviewRequest):
         serial_str = str(serial).zfill(pad) if pad else str(serial)
 
     check_record = {
-        "serial_number": serial,
-        "account_number": account_cfg.get("account_number", "007740015665"),
-        "routing_number": account_cfg.get("routing_number", "011900445"),
-        "payee_name": req.payee,
-        "amount_cents": amount_cents,
-        "issue_date": issue_date,
-        "memo": req.memo or "",
-        "layout": req.layout,
-        "page_format": req.page_format,
-        "remittance_data": remittance_data,
+        "serial_number":        serial,
+        "account_number":       account_cfg.get("account_number", "007740015665"),
+        "routing_number":       account_cfg.get("routing_number", "011900445"),
+        "payee_name":           req.payee,
+        "payee_address":        req.payee_address,
+        "payee_city_state_zip": req.payee_city_state_zip,
+        "amount_cents":         amount_cents,
+        "issue_date":           issue_date,
+        "memo":                 req.memo or "",
+        "layout":               req.layout,
+        "page_format":          req.page_format,
+        "remittance_data":      remittance_data,
     }
 
     try:
@@ -484,14 +500,21 @@ def preview_check(req: PreviewRequest):
         pdf_bytes = pdf_buf.getvalue()
         pdf = pdfium.PdfDocument(pdf_bytes)
         page = pdf[0]
-        # Render at 150 DPI (scale 2.083 ~ 2x)
+        # Render at 150 DPI (scale 2.0)
         pil_img = page.render(scale=2.0).to_pil()
-        pdf.close()
-
         buf = io.BytesIO()
         pil_img.save(buf, format="PNG", optimize=True)
         img_bytes = buf.getvalue()
         b64_img = base64.b64encode(img_bytes).decode("ascii")
+
+        b64_back_img = None
+        if len(pdf) > 1:
+            back_page = pdf[1]
+            back_pil = back_page.render(scale=2.0).to_pil()
+            back_buf = io.BytesIO()
+            back_pil.save(back_buf, format="PNG", optimize=True)
+            b64_back_img = base64.b64encode(back_buf.getvalue()).decode("ascii")
+        pdf.close()
 
         # Computed amount words
         if req.layout == "remittance":
@@ -501,17 +524,13 @@ def preview_check(req: PreviewRequest):
             legal_text = amounts.cents_to_legal(amount_cents)
             courtesy_text = amounts.cents_to_courtesy(amount_cents)
 
-        # Compute dynamic MICR display string
-        routing_str = str(account_cfg.get("routing_number", "053000196"))
-        account_str = str(account_cfg.get("account_number", "123456789012"))
-        micr_display = (
-            f"O{serial_str}O "
-            f"T{validation.mask_sensitive_number(routing_str)}T "
-            f"{validation.mask_sensitive_number(account_str)}O"
-        )
+        # Compute dynamic MICR display string directly from authentic E-13B codeline
+        raw_code_line = micr.build_code_line(check_record, bank_cfg)
+        micr_display = raw_code_line.replace(micr.TRANSIT, "T").replace(micr.ON_US, "O").replace(micr.AMOUNT, "A").strip()
 
         return {
             "image_data_url": f"data:image/png;base64,{b64_img}",
+            "back_image_data_url": f"data:image/png;base64,{b64_back_img}" if b64_back_img else None,
             "amount_cents": amount_cents,
             "legal_text": legal_text,
             "courtesy_text": courtesy_text,
@@ -562,6 +581,10 @@ def print_check_endpoint(req: PrintRequest):
             demo_signature=True,
             check_number=req.check_number,
             include_background=not req.outline_only,
+            payee_address=req.payee_address,
+            payee_city_state_zip=req.payee_city_state_zip,
+            routing_number=req.routing_number,
+            account_number=req.account_number,
         )
 
         serial = result["serial_number"]

@@ -242,7 +242,7 @@ def validate_fractional_routing(frac: str) -> bool:
 
     frac = frac.strip()
 
-    if not re.fullmatch(r"\d+-\d+/\d+(?:\s+[A-Za-z]{2})?", frac):
+    if not re.fullmatch(r"\d+-\d+\s*/\s*\d+(?:\s+[A-Za-z]{2})?", frac):
         raise ValueError(
             f"Fractional routing number {frac!r} does not match the expected "
             "format 'prefix-suffix/FRB' (e.g. '70-2322/719' or '51-44/119 CT'). "

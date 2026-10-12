@@ -151,6 +151,10 @@ def run_pipeline(
     demo_signature: bool = False,
     check_number: int | None = None,
     include_background: bool = True,
+    payee_address: str | None = None,
+    payee_city_state_zip: str | None = None,
+    routing_number: str | None = None,
+    account_number: str | None = None,
 ) -> dict:
     """
     Execute the full check printing pipeline for a single check.
@@ -194,6 +198,11 @@ def run_pipeline(
             bank_cfg["bank_name"] = remittance_data["bank_name"]
         if "bank_city_state" in remittance_data:
             bank_cfg["bank_city_state"] = remittance_data["bank_city_state"]
+
+    if routing_number:
+        account_cfg["routing_number"] = routing_number
+    if account_number:
+        account_cfg["account_number"] = account_number
 
     prod_lock = (
         security_cfg.get("production_lock", "TEST")
@@ -243,16 +252,18 @@ def run_pipeline(
 
     # Build the full check record for rendering
     check_record = {
-        "serial_number":  serial,
-        "account_number": account_num,
-        "routing_number": routing_num,
-        "payee_name":     payee,
-        "amount_cents":   amount_cents,
-        "issue_date":     issue_date,
-        "memo":           memo,
-        "layout":         layout,
-        "page_format":    page_format,
-        "remittance_data": remittance_data,
+        "serial_number":        serial,
+        "account_number":       account_num,
+        "routing_number":       routing_num,
+        "payee_name":           payee,
+        "payee_address":        payee_address,
+        "payee_city_state_zip": payee_city_state_zip,
+        "amount_cents":         amount_cents,
+        "issue_date":           issue_date,
+        "memo":                 memo,
+        "layout":               layout,
+        "page_format":          page_format,
+        "remittance_data":      remittance_data,
     }
 
     # Generate Positive Pay file

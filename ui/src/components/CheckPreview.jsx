@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 export default function CheckPreview({
   previewData,
@@ -6,6 +6,8 @@ export default function CheckPreview({
   lastPrintResult,
   onClearPrintResult,
 }) {
+  const [activeSide, setActiveSide] = useState('front');
+
   return (
     <div className="panel-card preview-panel">
       <div className="panel-header">
@@ -16,9 +18,49 @@ export default function CheckPreview({
           </svg>
           Live Optical & Magnetic Preview
         </div>
-        <span className="brand-badge" style={{ borderColor: 'rgba(16, 185, 129, 0.4)', color: '#34d399', background: 'rgba(16, 185, 129, 0.1)' }}>
-          {isLoading ? 'RENDERING...' : 'ANSI X9 ACCURATE'}
-        </span>
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          {previewData?.back_image_data_url && (
+            <div style={{ display: 'flex', background: 'var(--bg-input)', borderRadius: '6px', padding: '2px', border: '1px solid var(--border-subtle)' }}>
+              <button
+                type="button"
+                className={`tag-btn ${activeSide === 'front' ? 'active' : ''}`}
+                style={{
+                  background: activeSide === 'front' ? '#4f46e5' : 'transparent',
+                  color: activeSide === 'front' ? '#fff' : 'var(--text-secondary)',
+                  border: 'none',
+                  padding: '4px 10px',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  fontSize: '0.72rem',
+                }}
+                onClick={() => setActiveSide('front')}
+              >
+                Front Face
+              </button>
+              <button
+                type="button"
+                className={`tag-btn ${activeSide === 'back' ? 'active' : ''}`}
+                style={{
+                  background: activeSide === 'back' ? '#4f46e5' : 'transparent',
+                  color: activeSide === 'back' ? '#fff' : 'var(--text-secondary)',
+                  border: 'none',
+                  padding: '4px 10px',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  fontSize: '0.72rem',
+                }}
+                onClick={() => setActiveSide('back')}
+              >
+                Back (Endorsement)
+              </button>
+            </div>
+          )}
+          <span className="brand-badge" style={{ borderColor: 'rgba(16, 185, 129, 0.4)', color: '#34d399', background: 'rgba(16, 185, 129, 0.1)' }}>
+            {isLoading ? 'RENDERING...' : previewData?.layout === 'personal' ? 'BOFA PERSONAL (6" × 2 3/5")' : previewData?.layout === 'business' ? 'BOFA BUSINESS (8.5" × 3.5")' : 'USAA REMITTANCE'}
+          </span>
+        </div>
       </div>
 
       <div className="panel-body">
@@ -60,7 +102,22 @@ export default function CheckPreview({
 
         {/* Real-time PDF Canvas / Image */}
         <div className="preview-container">
-          {previewData?.image_data_url ? (
+          {(activeSide === 'back' && previewData?.back_image_data_url) ? (
+            <div
+              className="check-shadow-wrapper"
+              style={{
+                maxWidth: previewData.page_format === 'voucher_sheet' ? '460px' : '720px',
+                opacity: isLoading ? 0.7 : 1,
+                transition: 'opacity 0.2s ease',
+              }}
+            >
+              <img
+                src={previewData.back_image_data_url}
+                alt="Rendered Check Reverse (Endorsement Side)"
+                className="check-image"
+              />
+            </div>
+          ) : previewData?.image_data_url ? (
             <div
               className="check-shadow-wrapper"
               style={{
@@ -71,7 +128,7 @@ export default function CheckPreview({
             >
               <img
                 src={previewData.image_data_url}
-                alt="Rendered ANSI X9 Check"
+                alt="Rendered ANSI X9 Check Face"
                 className="check-image"
               />
             </div>
@@ -82,34 +139,59 @@ export default function CheckPreview({
           )}
         </div>
 
-        {/* MICR Bar & Standards Verification */}
-        <div className="micr-strip-box">
-          <div>
-            <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '4px' }}>
-              ANSI X9 E-13B MICR Code Line (0.625" Clear Band)
-            </div>
-            <div className="micr-text">
-              {previewData?.micr_display ? (
-                <span>{previewData.micr_display}</span>
-              ) : previewData?.layout === 'remittance' ? (
-                <span>O0039254225O T*****0445T ********5665O</span>
-              ) : (
-                <span>T*****0196T ********9012O 001004</span>
-              )}
+        {/* Inspection Bar */}
+        {activeSide === 'back' ? (
+          <div className="micr-strip-box" style={{ background: 'rgba(99, 102, 241, 0.08)', borderColor: 'rgba(99, 102, 241, 0.25)' }}>
+            <div>
+              <div style={{ fontSize: '0.7rem', color: '#a5b4fc', textTransform: 'uppercase', marginBottom: '4px', fontWeight: 600 }}>
+                Regulation CC & ANSI X9 Endorsement Layout
+              </div>
+              <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)' }}>
+                Trailing Edge: <strong>Payee Endorsement on RIGHT</strong> (Mobile Deposit Box & Microprint) · Middle: <strong>Bank Zone</strong> · Left: <strong>CPSA Security Box</strong>
+              </div>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '4px' }}>
+                Reg CC Compliance
+              </div>
+              <span style={{ fontSize: '0.82rem', fontWeight: 600, color: '#34d399', display: 'flex', alignItems: 'center', gap: '4px', justifyContent: 'flex-end' }}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                12 CFR Part 229 Verified
+              </span>
             </div>
           </div>
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '4px' }}>
-              ANSI X9.100 Aux On-Us Match
+        ) : (
+          <div className="micr-strip-box">
+            <div>
+              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '4px' }}>
+                ANSI X9 E-13B MICR Code Line (0.625" Clear Band)
+              </div>
+              <div className="micr-text">
+                {previewData?.micr_display ? (
+                  <span>{previewData.micr_display}</span>
+                ) : previewData?.layout === 'personal' ? (
+                  <span>⑆111000012⑆ 123456789012⑈ 1001⑈</span>
+                ) : previewData?.layout === 'business' ? (
+                  <span>⑈01001⑈ ⑆111000012⑆ 123456789012⑈</span>
+                ) : (
+                  <span>⑈0039254225⑈ ⑆011900445⑆ 007740015665⑈</span>
+                )}
+              </div>
             </div>
-            <span style={{ fontSize: '0.82rem', fontWeight: 600, color: '#34d399', display: 'flex', alignItems: 'center', gap: '4px', justifyContent: 'flex-end' }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-              #{previewData?.serial_formatted || previewData?.serial_number || '---'} Verified
-            </span>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '4px' }}>
+                {previewData?.layout === 'personal' ? 'BofA Personal Spec' : previewData?.layout === 'business' ? 'BofA Business Spec' : 'USAA Spec'}
+              </div>
+              <span style={{ fontSize: '0.82rem', fontWeight: 600, color: '#34d399', display: 'flex', alignItems: 'center', gap: '4px', justifyContent: 'flex-end' }}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                #{previewData?.serial_formatted || previewData?.serial_number || '---'} Verified
+              </span>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

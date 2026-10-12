@@ -220,8 +220,8 @@
 /* Layout Pill Selector */
 .layout-selector {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.35rem;
   background: var(--bg-input);
   padding: 4px;
   border-radius: var(--radius-md);

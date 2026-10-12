@@ -120,7 +120,10 @@ def _register_e13b_font() -> str:
 # Geometry constants (in inches, converted to points below)
 # ---------------------------------------------------------------------------
 
-# Check dimensions (business size; overridable via account_config)
+# Personal check dimensions: 6.0" wide by 2 3/5" (2.60") tall
+PERSONAL_WIDTH_IN  = 6.0
+PERSONAL_HEIGHT_IN = 2.60  # Exactly 2 3/5 inch
+
 DEFAULT_WIDTH_IN  = 8.5
 DEFAULT_HEIGHT_IN = 3.5
 
@@ -203,8 +206,20 @@ def render_check(
     else:
         target = output_path
 
-    # Allow check dict to override layout / page_format / remittance_data
-    layout = check.get("layout", layout)
+    raw_layout = check.get("layout")
+    if raw_layout:
+        layout = str(raw_layout).lower()
+        is_personal = layout in ("personal", "standard_personal", "standard") and not check.get("is_business", False)
+    else:
+        if layout in ("personal", "standard_personal"):
+            is_personal = True
+        elif layout in ("business", "remittance"):
+            is_personal = False
+        elif "check_dimensions" in account_config and account_config["check_dimensions"].get("width_in", 0) > 6.5:
+            is_personal = False
+        else:
+            is_personal = not check.get("is_business", False)
+
     page_format = check.get("page_format", page_format)
     if remittance_data is None:
         remittance_data = check.get("remittance_data", {})
@@ -214,10 +229,24 @@ def render_check(
     if page_format == "voucher_sheet":
         w_in = 8.5
         h_in = 11.0
-        check_h_in = account_config.get("check_dimensions", {}).get("height_in", DEFAULT_HEIGHT_IN)
+        check_h_in = PERSONAL_HEIGHT_IN if is_personal else account_config.get("check_dimensions", {}).get("height_in", DEFAULT_HEIGHT_IN)
     else:
-        w_in = account_config.get("check_dimensions", {}).get("width_in",  DEFAULT_WIDTH_IN)
-        h_in = account_config.get("check_dimensions", {}).get("height_in", DEFAULT_HEIGHT_IN)
+        # check_only mode
+        if "check_dimensions" in check:
+            w_in = check["check_dimensions"].get("width_in", PERSONAL_WIDTH_IN if is_personal else DEFAULT_WIDTH_IN)
+            h_in = check["check_dimensions"].get("height_in", PERSONAL_HEIGHT_IN if is_personal else DEFAULT_HEIGHT_IN)
+            if w_in <= 6.5:
+                is_personal = True
+        elif "check_dimensions" in account_config:
+            w_in = account_config["check_dimensions"].get("width_in", PERSONAL_WIDTH_IN if is_personal else DEFAULT_WIDTH_IN)
+            h_in = account_config["check_dimensions"].get("height_in", PERSONAL_HEIGHT_IN if is_personal else DEFAULT_HEIGHT_IN)
+            if w_in > 6.5:
+                is_personal = False
+            elif w_in <= 6.5:
+                is_personal = True
+        else:
+            w_in = PERSONAL_WIDTH_IN if is_personal else DEFAULT_WIDTH_IN
+            h_in = PERSONAL_HEIGHT_IN if is_personal else DEFAULT_HEIGHT_IN
         check_h_in = h_in
 
     w_pt = w_in * inch
@@ -231,19 +260,34 @@ def render_check(
     # FACE
     # ------------------------------------------------------------------
     if page_format == "voucher_sheet":
-        if include_background:
-            _draw_voucher_stub(c, check, bank_config, account_config, remittance_data, w_in, h_in, check_h_in)
-        if layout == "remittance":
+        if is_personal:
+            if include_background:
+                _draw_personal_voucher_stub(c, check, bank_config, account_config, w_in, h_in, check_h_in)
+            _draw_personal_face(c, check, bank_config, account_config, micr_font, w_in=6.0, h_in=check_h_in,
+                                draw_signature=draw_signature, signature_image_bytes=signature_image_bytes,
+                                y_offset=0, x_offset=(w_in - 6.0)/2 * inch,
+                                include_background=include_background)
+        elif layout == "remittance":
+            if include_background:
+                _draw_voucher_stub(c, check, bank_config, account_config, remittance_data, w_in, h_in, check_h_in)
             _draw_remittance_face(c, check, bank_config, account_config, micr_font, w_in, check_h_in,
                                   draw_signature=draw_signature, signature_image_bytes=signature_image_bytes,
                                   remittance_data=remittance_data, y_offset=0,
                                   include_background=include_background)
         else:
+            if include_background:
+                _draw_voucher_stub(c, check, bank_config, account_config, remittance_data, w_in, h_in, check_h_in)
             _draw_face(c, check, bank_config, account_config, micr_font, w_in, check_h_in,
                        draw_signature=draw_signature, signature_image_bytes=signature_image_bytes, y_offset=0,
                        include_background=include_background)
     else:
-        if layout == "remittance":
+        # check_only mode
+        if is_personal:
+            _draw_personal_face(c, check, bank_config, account_config, micr_font, w_in, h_in,
+                                draw_signature=draw_signature, signature_image_bytes=signature_image_bytes,
+                                y_offset=0, x_offset=0,
+                                include_background=include_background)
+        elif layout == "remittance":
             _draw_remittance_face(c, check, bank_config, account_config, micr_font, w_in, h_in,
                                   draw_signature=draw_signature, signature_image_bytes=signature_image_bytes,
                                   remittance_data=remittance_data, y_offset=0,
@@ -420,6 +464,21 @@ def _draw_face(
     # Payee underline
     _draw_rule(c, payee_field_start, payee_y, (w_in * 0.72) * inch, payee_y)
 
+    # Optional Payee Address (lines 1 & 2)
+    payee_addr_line1 = check.get("payee_address") or ""
+    payee_addr_line2 = check.get("payee_city_state_zip") or ""
+    if payee_addr_line1 or payee_addr_line2:
+        c.saveState()
+        c.setFont("Helvetica", 8)
+        c.setFillColor(TEXT_COLOR)
+        addr_y = payee_y - 9
+        if payee_addr_line1:
+            c.drawString(payee_field_start, addr_y, payee_addr_line1)
+            addr_y -= 9
+        if payee_addr_line2:
+            c.drawString(payee_field_start, addr_y, payee_addr_line2)
+        c.restoreState()
+
     # -- Courtesy amount box -----------------------------------------------
     box_x      = (w_in * 0.74) * inch
     box_y      = payee_y - 4
@@ -449,15 +508,17 @@ def _draw_face(
     c.setFillColor(RULE_COLOR)
     c.drawRightString((w_in - m) * inch, legal_y + 4 + 10, "DOLLARS")
 
-    # -- Bank name and city ------------------------------------------------
-    bank_y = legal_y - 26
+    # -- Bank name and city (Drawee Institution per BofA spec) ------------
+    bank_y = legal_y - 22
     c.setFillColor(TEXT_COLOR)
-    c.setFont("Helvetica", 9)
-    bank_display = (
-        f"{bank_config.get('bank_name', '')}  ·  "
-        f"{bank_config.get('bank_city_state', '')}"
-    )
-    c.drawString(drawer_x, bank_y, bank_display)
+    c.setFont("Helvetica-Bold", 8.5)
+    bank_name = bank_config.get("bank_name", "Bank of America, N.A.")
+    bank_city = bank_config.get("bank_city_state", "Dallas, TX")
+    c.drawString(drawer_x, bank_y, f"{bank_name}  ·  {bank_city}")
+    c.setFont("Helvetica", 7.0)
+    c.setFillColor(RULE_COLOR)
+    rt = check.get("routing_number") or account_config.get("routing_number", "111000012")
+    c.drawString(drawer_x, bank_y - 9, f"ACH R/T {rt}")
 
     # -- Memo line ---------------------------------------------------------
     memo_y = CLEAR_BAND_HEIGHT_IN * inch + 0.32 * inch + y_offset
@@ -501,33 +562,370 @@ def _draw_face(
     _draw_micr_line(c, check, bank_config, micr_font, w_in, y_offset=y_offset)
 
 
-def _draw_micr_line(c, check, bank_config, micr_font, w_in, y_offset: float = 0.0):
-    """
-    Draw the MICR code line centered in the print band.
+def _draw_personal_padlock_icon(c, icon_x: float, icon_y: float, with_text: bool = True):
+    """Draw padlock security icon and 'Security Features Details on Back' per ANSI X9.100-170."""
+    c.saveState()
+    icon_w = 9.5
+    icon_h = 8.5
+    c.setStrokeColor(RULE_COLOR)
+    c.setFillColor(colors.HexColor("#718096"))
+    c.setLineWidth(0.7)
+    # Shackle
+    c.arc(icon_x + 1.6, icon_y + 4.8, icon_x + icon_w - 1.6, icon_y + 11.5, 0, 180)
+    # Body
+    c.rect(icon_x, icon_y, icon_w, icon_h, fill=1, stroke=1)
+    # Keyhole
+    c.setFillColor(colors.white)
+    c.circle(icon_x + icon_w / 2, icon_y + icon_h / 2, 0.9, fill=1, stroke=0)
+    if with_text:
+        c.setFont("Helvetica", 3.8)
+        c.setFillColor(RULE_COLOR)
+        tx = icon_x + icon_w + 2.5
+        c.drawString(tx, icon_y + 7.5, "Security")
+        c.drawString(tx, icon_y + 3.5, "Features")
+        c.drawString(tx, icon_y - 0.5, "Details on")
+        c.drawString(tx, icon_y - 4.5, "Back")
+    else:
+        c.setFont("Helvetica-Bold", 4.5)
+        c.setFillColor(RULE_COLOR)
+        c.drawString(icon_x + icon_w + 2.5, icon_y + 3.0, "MP")
+    c.restoreState()
 
-    Print band: centred in the 0.625 in clear band → y = 0.1875 to 0.4375 in.
-    Character baseline is at (0.1875 + 0.125/2) * inch to centre the glyph.
-    Characters are 0.125 in wide (8 per inch), printed left-to-right.
-    The 65-character string starts at the right side of the clear band (leading
-    edge) and extends left.  In our coordinate system (origin = bottom-left),
-    position 1 (rightmost) is at x = w_in - 0 (right edge), going left.
+
+def _draw_bofa_flag_logo(c, x: float, y: float, size: float = 12):
+    """Draw Bank of America flagscape mark (red and blue striped bars)."""
+    c.saveState()
+    # Red bars (top and right)
+    c.setFillColor(colors.HexColor("#E31837"))
+    c.rect(x, y + size * 0.52, size * 0.42, size * 0.36, fill=1, stroke=0)
+    c.rect(x + size * 0.50, y + size * 0.52, size * 0.50, size * 0.36, fill=1, stroke=0)
+    # Blue bars (bottom)
+    c.setFillColor(colors.HexColor("#002677"))
+    c.rect(x + size * 0.12, y, size * 0.38, size * 0.40, fill=1, stroke=0)
+    c.rect(x + size * 0.58, y, size * 0.42, size * 0.40, fill=1, stroke=0)
+    c.restoreState()
+
+
+def _draw_personal_face(
+    c, check, bank_config, account_config, micr_font, w_in: float, h_in: float,
+    draw_signature: bool = False, signature_image_bytes: bytes | None = None,
+    y_offset: float = 0.0, x_offset: float = 0.0,
+    include_background: bool = True,
+):
+    """
+    Draw an authentic, legally compliant Bank of America Personal Check face
+    strictly matching Bank of America Global Account Printing Specifications Page 3
+    (6.0" wide × 2 3/4" high, 5/8" clear band, components 1 through 10).
+    """
+    m = 0.22 * inch
+
+    # Background
+    if include_background:
+        c.setFillColor(colors.HexColor("#FAFBFD"))
+        c.rect(x_offset, y_offset, w_in * inch, h_in * inch, fill=1, stroke=0)
+        # Subtle perimeter security border
+        c.setStrokeColor(colors.HexColor("#CBD5E1"))
+        c.setLineWidth(0.6)
+        c.rect(x_offset + 3, y_offset + 3, w_in * inch - 6, h_in * inch - 6, fill=0, stroke=1)
+        # Faint security feature notice along top
+        c.setFillColor(LEGEND_COLOR)
+        c.setFont("Helvetica", 4.8)
+        c.drawCentredString(
+            x_offset + (w_in / 2) * inch,
+            y_offset + (h_in - 0.10) * inch,
+            "SECURITY FEATURES: Chemically reactive paper · Micro-printed border · Absence of features indicates copy",
+        )
+    else:
+        c.setStrokeColor(RULE_COLOR)
+        c.setLineWidth(0.5)
+        c.rect(x_offset, y_offset, w_in * inch, h_in * inch, fill=0, stroke=1)
+
+    # Component 1 (Top-Left): Customer Name & Address
+    top_y = y_offset + h_in * inch
+    drawer_x = x_offset + m
+    drawer_y = top_y - 18.0
+
+    c.setFillColor(TEXT_COLOR)
+    c.setFont("Helvetica-Bold", 9.5)
+    c.drawString(drawer_x, drawer_y, account_config.get("drawer_name", "Minnie Hinds"))
+
+    drawer_addr = account_config.get("drawer_address", "")
+    if isinstance(drawer_addr, list):
+        drawer_addr_line = drawer_addr[0] if len(drawer_addr) > 0 else ""
+        drawer_csz = drawer_addr[1] if len(drawer_addr) > 1 else account_config.get("drawer_city_state_zip", "")
+    else:
+        drawer_addr_line = str(drawer_addr)
+        drawer_csz = account_config.get("drawer_city_state_zip", "")
+
+    c.setFont("Helvetica", 8.0)
+    c.drawString(drawer_x, drawer_y - 10.0, drawer_addr_line)
+    c.drawString(drawer_x, drawer_y - 19.0, drawer_csz)
+
+    # Component 6 (Far Top-Right): Check Serial Number
+    right_x = x_offset + (w_in * inch) - m
+    c.setFont("Helvetica-Bold", 13.5)
+    c.setFillColor(TEXT_COLOR)
+    serial_str = str(check["serial_number"])
+    c.drawRightString(right_x, drawer_y - 1.5, serial_str)
+    serial_w = c.stringWidth(serial_str, "Helvetica-Bold", 13.5)
+
+    # Component 7 (To the left of Check No.): Fractional Routing
+    frac_rt = account_config.get("fractional_routing", "32-1 / 1110 GL")
+    c.setFont("Helvetica", 7.5)
+    c.setFillColor(colors.HexColor("#475569"))
+    c.drawRightString(right_x - serial_w - 12, drawer_y - 1.5, frac_rt)
+
+    # Component 8: Date Line (Below Component 6 & 7)
+    date_y = drawer_y - 21.0
+    c.setFont("Helvetica-Bold", 7.5)
+    c.setFillColor(RULE_COLOR)
+    c.drawString(x_offset + (w_in * 0.58) * inch, date_y + 3, "Date")
+    _draw_rule(c, x_offset + (w_in * 0.58 + 0.30) * inch, date_y, right_x, date_y)
+
+    issue_date = check.get("issue_date", "")
+    if issue_date:
+        try:
+            dt = datetime.date.fromisoformat(issue_date)
+            display_date = dt.strftime("%m/%d/%Y")
+        except ValueError:
+            display_date = issue_date
+    else:
+        display_date = datetime.date.today().strftime("%m/%d/%Y")
+
+    c.setFont("Helvetica", 8.5)
+    c.setFillColor(TEXT_COLOR)
+    c.drawRightString(right_x - 4, date_y + 3, display_date)
+
+    # Component 2: Pay to the order of (Stacked per BofA spec)
+    payee_y = drawer_y - 42.0
+    c.setFillColor(TEXT_COLOR)
+    c.setFont("Helvetica-Bold", 8.5)
+    c.drawString(drawer_x, payee_y + 4, "Pay to the")
+    c.drawString(drawer_x, payee_y - 4, "order of")
+
+    payee_start_x = drawer_x + 52
+
+    c.setFont("Helvetica-Bold", 9.5)
+    c.drawString(payee_start_x + 2, payee_y + 2, check.get("payee_name", ""))
+
+    # Component 9: Courtesy Amount Box
+    box_w = 1.15 * inch
+    box_h = 18.0
+    box_x = right_x - box_w
+    box_y = payee_y - 4
+
+    # Dollar sign preceding the box
+    c.setFont("Helvetica-Bold", 11.0)
+    c.setFillColor(TEXT_COLOR)
+    c.drawString(box_x - 12, box_y + 4.5, "$")
+
+    # Payee underline
+    _draw_rule(c, payee_start_x, payee_y, box_x - 16, payee_y)
+
+    # Box 9
+    c.setStrokeColor(RULE_COLOR)
+    c.setFillColor(colors.white)
+    c.rect(box_x, box_y, box_w, box_h, fill=1, stroke=1)
+
+    # Inside box amount
+    c.setFillColor(TEXT_COLOR)
+    c.setFont("Helvetica-Bold", 10.0)
+    courtesy = cents_to_courtesy(check["amount_cents"])
+    box_courtesy = courtesy.lstrip("$*")
+    if not box_courtesy:
+        box_courtesy = courtesy
+    c.drawRightString(box_x + box_w - 4, box_y + 4.5, box_courtesy)
+
+    # Optional Payee Address
+    payee_addr_line1 = check.get("payee_address") or ""
+    payee_addr_line2 = check.get("payee_city_state_zip") or ""
+    if payee_addr_line1 or payee_addr_line2:
+        c.saveState()
+        c.setFont("Helvetica", 7.0)
+        c.setFillColor(TEXT_COLOR)
+        if payee_addr_line1:
+            c.drawString(payee_start_x, payee_y - 9, payee_addr_line1)
+        if payee_addr_line2:
+            c.drawString(payee_start_x, payee_y - 17, payee_addr_line2)
+        c.restoreState()
+
+    # Component 3: Legal Amount Line ending in "Dollars"
+    legal_y = payee_y - (24.0 if (payee_addr_line1 or payee_addr_line2) else 18.0)
+    c.setFont("Helvetica", 8.5)
+    c.setFillColor(TEXT_COLOR)
+    legal_text = cents_to_legal(check["amount_cents"], line_width=52)
+    c.drawString(drawer_x, legal_y + 3, legal_text)
+
+    dollars_w = c.stringWidth("Dollars", "Helvetica-Bold", 8.0)
+    dollars_x = right_x
+    _draw_rule(c, drawer_x, legal_y, dollars_x - dollars_w - 6, legal_y)
+    c.setFont("Helvetica-Bold", 8.0)
+    c.setFillColor(RULE_COLOR)
+    c.drawRightString(dollars_x, legal_y + 3, "Dollars")
+
+    # Component 4: Bank of America Flag Logo, Bank Name, and ACH R/T
+    bank_y = legal_y - 16.0
+    _draw_bofa_flag_logo(c, drawer_x, bank_y - 2, size=11)
+    c.setFont("Helvetica-Bold", 8.5)
+    c.setFillColor(TEXT_COLOR)
+    bank_name = bank_config.get("bank_name", "Bank of America")
+    c.drawString(drawer_x + 15, bank_y, bank_name)
+    c.setFont("Helvetica", 6.5)
+    c.setFillColor(colors.HexColor("#475569"))
+    rt = check.get("routing_number") or account_config.get("routing_number", "111000012")
+    c.drawString(drawer_x, bank_y - 8.5, f"ACH R/T {rt}")
+
+    # Memo Line and Signature Line:
+    # Positioned at about 6/8" (0.75 in = 54 pt) from the bottom edge,
+    # above the invisible 5/8" clear band line per specification.
+    bottom_ctrl_y = y_offset + (6.0 / 8.0) * inch
+
+    # Memo: 'Memo ________________________'
+    c.setFont("Helvetica-Bold", 7.5)
+    c.setFillColor(RULE_COLOR)
+    c.drawString(drawer_x, bottom_ctrl_y + 3, "Memo")
+    memo_rule_end = x_offset + (w_in * 0.44) * inch
+    _draw_rule(c, drawer_x + 28, bottom_ctrl_y, memo_rule_end, bottom_ctrl_y)
+
+    memo_text = check.get("memo", "")
+    if memo_text:
+        c.setFont("Helvetica", 8.0)
+        c.setFillColor(TEXT_COLOR)
+        c.drawString(drawer_x + 30, bottom_ctrl_y + 3, memo_text[:30])
+
+    # Component 10: Signature Line
+    sig_x_start = x_offset + (w_in * 0.50) * inch
+    sig_x_end = right_x
+    _draw_microprint_line(c, sig_x_start, bottom_ctrl_y, sig_x_end, bottom_ctrl_y)
+
+    if draw_signature:
+        if signature_image_bytes:
+            _draw_signature_image(c, signature_image_bytes, sig_x_start + 4, bottom_ctrl_y + 1,
+                                  (sig_x_end - sig_x_start - 8), 22)
+        else:
+            _draw_script_signature(c, sig_x_start + 8, bottom_ctrl_y + 2)
+
+    # Clear band (bottom 5/8 in = 0.625" high from bottom, pure white for MICR/MBR)
+    c.setFillColor(colors.white)
+    c.rect(x_offset, y_offset, w_in * inch, CLEAR_BAND_HEIGHT_IN * inch, fill=1, stroke=0)
+
+    # Personal MICR line
+    _draw_micr_line(c, check, bank_config, micr_font, w_in, y_offset=y_offset, x_offset=x_offset)
+
+
+def _draw_personal_voucher_stub(c, check, bank_config, account_config, w_in: float, h_in: float, check_h_in: float):
+    """
+    Draw personal check transaction record and register on an 8.5" x 11" voucher sheet.
+    Personal check face sits at the bottom (y = 0 to check_h_in).
+    """
+    c.saveState()
+    # Perforation guide line above check
+    perf_y = (check_h_in + 0.15) * inch
+    c.setStrokeColor(colors.HexColor("#94A3B8"))
+    c.setDash(4, 4)
+    c.line(0.5 * inch, perf_y, (w_in - 0.5) * inch, perf_y)
+    c.setDash()
+
+    c.setFont("Helvetica", 6.5)
+    c.setFillColor(colors.HexColor("#64748B"))
+    c.drawCentredString((w_in / 2) * inch, perf_y + 4, "✂   DETACH BEFORE CASHING   ·   PERSONAL RECORD BELOW   ✂")
+
+    # Header for personal transaction record
+    stub_bottom = perf_y + 12
+    c.setFillColor(colors.HexColor("#F8FAFC"))
+    c.rect(0.5 * inch, stub_bottom, (w_in - 1.0) * inch, (h_in * inch - stub_bottom - 0.3 * inch), fill=1, stroke=0)
+
+    stub_top_y = (h_in - 0.5) * inch
+    c.setFont("Helvetica-Bold", 11)
+    c.setFillColor(colors.HexColor("#1E293B"))
+    c.drawString(0.8 * inch, stub_top_y, "PERSONAL CHECK TRANSACTION RECORD & REGISTER")
+
+    c.setFont("Helvetica", 7.5)
+    c.setFillColor(colors.HexColor("#64748B"))
+    c.drawString(0.8 * inch, stub_top_y - 12, "Retain this portion for your personal records, budget tracking, and tax accounting.")
+
+    # Record summary card
+    card_y = stub_top_y - 82
+    c.setFillColor(colors.white)
+    c.setStrokeColor(colors.HexColor("#CBD5E1"))
+    c.rect(0.8 * inch, card_y, (w_in - 1.6) * inch, 60, fill=1, stroke=1)
+
+    courtesy = cents_to_courtesy(check['amount_cents'])
+    c.setFont("Helvetica-Bold", 8.5)
+    c.setFillColor(colors.HexColor("#334155"))
+    c.drawString(1.0 * inch, card_y + 44, f"CHECK #{check['serial_number']}")
+    c.drawString(2.8 * inch, card_y + 44, f"DATE: {check.get('issue_date', '')}")
+    c.drawRightString((w_in - 1.0) * inch, card_y + 44, f"AMOUNT: {courtesy}")
+
+    c.setFont("Helvetica", 8.0)
+    c.drawString(1.0 * inch, card_y + 26, f"PAYEE: {check.get('payee_name', '')}")
+    memo = check.get('memo', '')
+    if memo:
+        c.drawString(1.0 * inch, card_y + 10, f"MEMO: {memo}")
+
+    # Check Register Table
+    reg_y = card_y - 28
+    c.setFont("Helvetica-Bold", 8.5)
+    c.setFillColor(colors.HexColor("#334155"))
+    c.drawString(0.8 * inch, reg_y, "CHECK REGISTER ENTRIES")
+
+    # Table header
+    th_y = reg_y - 18
+    c.setFillColor(colors.HexColor("#EEF2F6"))
+    c.setStrokeColor(colors.HexColor("#CBD5E1"))
+    c.rect(0.8 * inch, th_y, (w_in - 1.6) * inch, 16, fill=1, stroke=1)
+
+    c.setFont("Helvetica-Bold", 6.5)
+    c.setFillColor(colors.HexColor("#334155"))
+    c.drawString(0.9 * inch, th_y + 5, "CHECK #")
+    c.drawString(1.6 * inch, th_y + 5, "DATE")
+    c.drawString(2.4 * inch, th_y + 5, "DESCRIPTION / PAYEE")
+    c.drawString(5.0 * inch, th_y + 5, "PAYMENT (-)")
+    c.drawString(5.9 * inch, th_y + 5, "FEE")
+    c.drawString(6.6 * inch, th_y + 5, "DEPOSIT (+)")
+    c.drawString(7.3 * inch, th_y + 5, "BALANCE")
+
+    # 6 blank register rows
+    row_h = 24.0
+    for r in range(6):
+        ry = th_y - (r + 1) * row_h
+        c.setFillColor(colors.white if r % 2 == 0 else colors.HexColor("#FAFAFA"))
+        c.rect(0.8 * inch, ry, (w_in - 1.6) * inch, row_h, fill=1, stroke=1)
+        if r == 0:
+            c.setFont("Helvetica", 7.0)
+            c.setFillColor(colors.HexColor("#1E293B"))
+            c.drawString(0.9 * inch, ry + 8, str(check['serial_number']))
+            c.drawString(1.6 * inch, ry + 8, check.get('issue_date', ''))
+            c.drawString(2.4 * inch, ry + 8, check.get('payee_name', '')[:30])
+            c.drawString(5.0 * inch, ry + 8, courtesy)
+
+    c.restoreState()
+
+
+def _draw_micr_line(c, check, bank_config, micr_font, w_in, y_offset: float = 0.0, x_offset: float = 0.0):
+    """
+    Draw the ANSI X9.100-160-1 / ANSI X9.27 E-13B MICR code line.
+    Position 1 is anchored 0.3125 in (5/16 in) from the right (leading) edge.
+    Pitch is standard ANSI 10 CPI (0.100 in = 7.2 pt) with character baseline
+    centered in the 0.625 in clear band.
     """
     code_line = build_code_line(check, bank_config)
 
-    micr_y  = y_offset + PRINT_BAND_BOTTOM_IN * inch + 3   # baseline in print band
-    char_w  = MICR_CHAR_WIDTH_IN * inch
-    font_sz = MICR_FONT_SIZE_PT
+    char_w  = 0.100 * inch
+    font_sz = 8.5
+    micr_y  = y_offset + PRINT_BAND_BOTTOM_IN * inch + 3.0
 
     c.setFillColor(colors.black)
 
-    # code_line is left-to-right; leftmost char = position 65 (trailing edge).
-    # We draw from left edge at x=0, character by character using _draw_micr_glyph
-    # so delimiter symbols and digits map correctly into E13B glyphs.
-    x = 0.0
-    for ch in code_line:
+    # Position 1 is at 0.3125" from the right edge
+    x_pos1 = x_offset + (w_in - 0.3125) * inch
+
+    for i, ch in enumerate(code_line):
         if ch != " ":
+            # Index i (0..64) corresponds to position (65 - i)
+            # Distance from position 1 is (pos - 1) * char_w = (64 - i) * char_w
+            x = x_pos1 - (64 - i) * char_w
             _draw_micr_glyph(c, ch, x, micr_y, char_w, micr_font, font_sz)
-        x += char_w
 
 
 # ---------------------------------------------------------------------------
@@ -616,8 +1014,8 @@ def _draw_micr_glyph(c, ch: str, x: float, y: float, char_w: float, font_name: s
     If true E-13B font is registered:
       Maps special symbols to the font's ASCII glyph mappings:
         Transit (⑆, \u2446) -> 'T'
-        On-Us (⑈, \u2447)   -> 'O'
-        Amount (⑇, \u2448)  -> 'A'
+        On-Us (⑈, \u2448 / \u2447) -> 'O'
+        Amount (⑇, \u2447)  -> 'A'
         Dash (⑉, \u2449)    -> 'D'
         Digits '0'-'9'       -> '0'-'9'
     If fallback font (Courier):
@@ -626,46 +1024,42 @@ def _draw_micr_glyph(c, ch: str, x: float, y: float, char_w: float, font_name: s
     is_fallback = (font_name == _FALLBACK_FONT)
     c.saveState()
     c.setFillColor(colors.black)
-    if is_fallback and ch in ("\u2447", "C", "c", "O", "o"):
+    if is_fallback and ch in ("\u2447", "\u2448", "C", "c", "O", "o"):
         # On-Us symbol (⑈): two vertical bars with two horizontal tick marks
         bar_w = 1.05
         bar_h = 7.8
         by = y + 0.8
         # Left and right bars
-        c.rect(x + 1.8, by, bar_w, bar_h, fill=1, stroke=0)
-        c.rect(x + char_w - 2.85, by, bar_w, bar_h, fill=1, stroke=0)
+        c.rect(x + 1.2, by, bar_w, bar_h, fill=1, stroke=0)
+        c.rect(x + char_w - 2.2, by, bar_w, bar_h, fill=1, stroke=0)
         # Center tick marks (top and bottom)
-        c.rect(x + 3.2, by + bar_h - 1.8, char_w - 6.4, 1.1, fill=1, stroke=0)
-        c.rect(x + 3.2, by + 0.7, char_w - 6.4, 1.1, fill=1, stroke=0)
-    elif is_fallback and ch in ("\u2446", "A", "a", "T", "t"):
-        # Transit symbol (⑆): two vertical bars connected top and bottom
+        c.rect(x + 2.2, by + bar_h - 1.8, char_w - 4.4, 1.1, fill=1, stroke=0)
+        c.rect(x + 2.2, by + 0.7, char_w - 4.4, 1.1, fill=1, stroke=0)
+    elif is_fallback and ch in ("\u2446", "T", "t"):
+        # Transit symbol (⑆): vertical bars connected top and bottom
         bar_w = 1.05
         bar_h = 7.8
         by = y + 0.8
-        c.rect(x + 1.8, by, bar_w, bar_h, fill=1, stroke=0)
-        c.rect(x + char_w - 2.85, by, bar_w, bar_h, fill=1, stroke=0)
-        c.rect(x + 1.8, by + bar_h - 1.2, char_w - 3.65, 1.2, fill=1, stroke=0)
-        c.rect(x + 1.8, by, char_w - 3.65, 1.2, fill=1, stroke=0)
-    elif is_fallback and ch in ("\u2448", "B", "b"):
+        c.rect(x + 1.5, by, bar_w, bar_h, fill=1, stroke=0)
+        c.rect(x + char_w - 2.5, by, bar_w, bar_h, fill=1, stroke=0)
+        c.rect(x + 1.5, by + bar_h - 1.2, char_w - 3.0, 1.2, fill=1, stroke=0)
+        c.rect(x + 1.5, by, char_w - 3.0, 1.2, fill=1, stroke=0)
+    elif is_fallback and ch in ("A", "a", "B", "b"):
         # Amount symbol (⑇)
-        c.rect(x + 2.5, y + 1.5, char_w - 5.0, 6.5, fill=1, stroke=0)
+        c.rect(x + 2.0, y + 1.5, char_w - 4.0, 6.5, fill=1, stroke=0)
     elif is_fallback and ch in ("\u2449", "D", "d"):
         # Dash symbol (⑉)
-        c.rect(x + 2.0, y + 4.2, char_w - 4.0, 1.4, fill=1, stroke=0)
+        c.rect(x + 1.5, y + 3.8, char_w - 3.0, 1.4, fill=1, stroke=0)
     elif is_fallback:
         c.setFont("Helvetica-Bold", font_sz)
         c.drawString(x, y, ch)
     else:
         # Authentic ANSI X9.100-20 E-13B font
         # Map Unicode or alternate characters to E-13B font ASCII mappings:
-        # Transit: \u2446 -> 'T'
-        # On-Us:   \u2447 -> 'O'
-        # Amount:  \u2448 -> 'A'
-        # Dash:    \u2449 -> 'D'
         mapping = {
             "\u2446": "T",
+            "\u2448": "O",
             "\u2447": "O",
-            "\u2448": "A",
             "\u2449": "D",
             "C": "O",
             "c": "O",
@@ -673,6 +1067,10 @@ def _draw_micr_glyph(c, ch: str, x: float, y: float, char_w: float, font_name: s
             "o": "O",
             "a": "A",
             "d": "D",
+            "T": "T",
+            "O": "O",
+            "A": "A",
+            "D": "D",
         }
         glyph_char = mapping.get(ch, ch)
         c.setFont(font_name, font_sz)
@@ -1079,6 +1477,11 @@ def _draw_voucher_stub(c, check, bank_config, account_config, remittance_data, w
     c.setFont("Helvetica-Bold", 9)
     c.setFillColor(colors.HexColor("#2D3748"))
     c.drawString(m + 10, summary_y + 20, f"PAYEE: {check.get('payee_name', '')}")
+    payee_addr_full = ", ".join(filter(None, [check.get("payee_address"), check.get("payee_city_state_zip")]))
+    if payee_addr_full:
+        c.setFont("Helvetica", 7.5)
+        c.setFillColor(colors.HexColor("#4A5568"))
+        c.drawString(m + 10, summary_y + 8, f"ADDR: {payee_addr_full}")
     c.drawRightString((w_in * inch) - m - 10, summary_y + 20,
                       f"CHECK AMOUNT: {cents_to_courtesy(check['amount_cents'])}")
 
@@ -1123,72 +1526,170 @@ def _draw_voucher_stub(c, check, bank_config, account_config, remittance_data, w
 # ---------------------------------------------------------------------------
 
 def _draw_reverse(c, account_config, w_in, h_in):
-    """Draw the check reverse on the current canvas page."""
-    # Mirror: the reverse is printed so that when you flip the check over
-    # horizontally, the trailing edge (left face) becomes the right edge on back.
-    # For PDF purposes we draw straight and note the orientation.
+    """
+    Draw the check reverse on the current canvas page per Regulation CC & ANSI X9.
+    
+    Trailing edge of check face is at left; when turned horizontally,
+    the trailing edge corresponds to the RIGHT side on the back ("Back to Right").
+    - Right side (trailing edge): Payee Endorsement Zone (1.7 in width)
+    - Middle: Bank Endorsement Zone with 'ORIGINAL DOCUMENT' security screen backer
+    - Left side: CPSA Padlock Security Features Warning Box & Reg CC notice
+    """
+    w_pt = w_in * inch
+    h_pt = h_in * inch
 
-    c.setFillColor(BACKGROUND_COLOR)
-    c.rect(0, 0, w_in * inch, h_in * inch, fill=1, stroke=0)
+    c.saveState()
 
-    # Per buildspec.md §7, measured from the trailing edge (left of face = right of back):
-    # Zone boundaries from the TRAILING edge (= left edge of the back view):
-    #   Payee endorsement:          0 – 1.5 in
-    #   BOFD clear zone:            1.5 – (w_in - 3.0) in from the leading edge
-    #                               i.e. 1.5 in to (w_in - 3.0) in from trailing edge
-    #   Subsequent endorsers:       remainder toward leading edge
+    # Soft subtle backer background
+    c.setFillColor(colors.HexColor("#FAFBFD"))
+    c.rect(0, 0, w_pt, h_pt, fill=1, stroke=0)
 
-    trailing_edge_x = 0  # x=0 on back = trailing edge (left face = right back)
+    # ------------------------------------------------------------------
+    # 1. MIDDLE: Security Screen Backer ('ORIGINAL DOCUMENT') & BOFD Zone
+    # ------------------------------------------------------------------
+    # Payee endorsement zone on the RIGHT side (trailing edge)
+    endorse_w = 1.70 * inch
+    endorse_x = w_pt - endorse_w
+    endorse_right = w_pt - 0.20 * inch
+    endorse_left = endorse_x + 0.12 * inch
 
-    bofd_zone_start = 1.5 * inch
-    # 3.0 in from the leading edge on back = 3.0 in from right side of back
-    bofd_zone_end   = (w_in - 3.0) * inch
+    # Left warning box boundary
+    warning_box_w = min(2.5 * inch, (w_in * 0.40) * inch)
+    warning_box_x = 0.22 * inch
 
-    # Payee endorsement zone (0–1.5 in)
-    c.setStrokeColor(RULE_COLOR)
-    c.setFillColor(LEGEND_COLOR)
-    c.setFont("Helvetica", 7)
-    c.drawString(
-        trailing_edge_x + 6,
-        (h_in / 2 + 0.3) * inch,
-        "ENDORSE HERE",
-    )
-    c.drawString(
-        trailing_edge_x + 6,
-        (h_in / 2 + 0.15) * inch,
-        "X ___________________________",
-    )
+    # Bank Endorsement Zone (BOFD) is between warning box and endorsement zone
+    bofd_start_x = warning_box_x + warning_box_w + 0.15 * inch
+    bofd_end_x = endorse_x
 
-    # BOFD clear zone boundary lines
-    c.setStrokeColor(colors.HexColor("#CBD5E0"))
+    # Subtle 'ORIGINAL DOCUMENT' security pattern in bank zone
+    c.saveState()
+    # Clip pattern to middle zone
+    p = c.beginPath()
+    p.rect(bofd_start_x - 5, 0, bofd_end_x - bofd_start_x + 5, h_pt)
+    c.clipPath(p, stroke=0, fill=0)
+
+    c.setFillColor(colors.HexColor("#F1F5F9"))
+    c.setFont("Helvetica-Bold", 7.5)
+    doc_text = "ORIGINAL DOCUMENT   ·   ORIGINAL DOCUMENT   ·   ORIGINAL DOCUMENT"
+    step_y = 18.0
+    for y_idx in range(-5, int(h_pt / step_y) + 8):
+        c.saveState()
+        c.translate(bofd_start_x - 40, y_idx * step_y)
+        c.rotate(30)
+        c.drawString(0, 0, doc_text)
+        c.restoreState()
+    c.restoreState()
+
+    # BOFD boundary lines
+    c.setStrokeColor(colors.HexColor("#CBD5E1"))
+    c.setLineWidth(0.75)
     c.setDash(3, 3)
-    c.line(bofd_zone_start, 0, bofd_zone_start, h_in * inch)
-    c.line(bofd_zone_end,   0, bofd_zone_end,   h_in * inch)
+    c.line(bofd_start_x, 0, bofd_start_x, h_pt)
+    c.line(endorse_x, 0, endorse_x, h_pt)
     c.setDash()
 
-    # BOFD zone label (pale, outside the stamp area)
-    c.setFillColor(LEGEND_COLOR)
-    c.setFont("Helvetica", 6)
-    c.drawString(
-        bofd_zone_start + 4,
-        (h_in - 0.15) * inch,
-        "BANK ENDORSEMENT ZONE — DO NOT MARK",
-    )
+    # BOFD Header Label
+    c.setFont("Helvetica-Bold", 6.0)
+    c.setFillColor(colors.HexColor("#64748B"))
+    c.drawCentredString((bofd_start_x + bofd_end_x) / 2, h_pt - 0.20 * inch, "BANK ENDORSEMENT ZONE — DO NOT MARK")
 
-    # Security warning text (outside the BOFD zone)
-    security_text = (
-        "SECURITY FEATURES: Chemically reactive paper · Void pantograph · "
-        "Micro-printed border · Authorized signatures required. "
-        "If any of these features are absent, this check may be a copy."
-    )
-    c.setFont("Helvetica", 6)
-    c.setFillColor(LEGEND_COLOR)
+    # ------------------------------------------------------------------
+    # 2. RIGHT: Payee Endorsement Zone (Trailing Edge / Back to Right)
+    # ------------------------------------------------------------------
+    c.setFont("Helvetica-Bold", 8.0)
+    c.setFillColor(TEXT_COLOR)
+    c.drawString(endorse_left, h_pt - 0.32 * inch, "ENDORSE HERE")
 
-    # Place the warning in the area past the BOFD zone (toward leading edge)
-    warning_x = bofd_zone_end + 8
-    available_w = (w_in * inch) - warning_x - (0.15 * inch)
-    _draw_wrapped_text(c, security_text, warning_x, (h_in / 2) * inch,
-                       available_w, "Helvetica", 6, LEGEND_COLOR, line_height=8)
+    # Signature Line 1
+    sig1_y = h_pt - 0.54 * inch
+    c.setFont("Helvetica-Bold", 8.0)
+    c.drawString(endorse_left, sig1_y + 1, "X")
+    _draw_rule(c, endorse_left + 10, sig1_y, endorse_right, sig1_y)
+
+    # Signature Line 2
+    sig2_y = h_pt - 0.74 * inch
+    _draw_rule(c, endorse_left + 10, sig2_y, endorse_right, sig2_y)
+
+    # Signature Line 3
+    sig3_y = h_pt - 0.94 * inch
+    _draw_rule(c, endorse_left + 10, sig3_y, endorse_right, sig3_y)
+
+    # Mobile Deposit Checkbox
+    chk_y = h_pt - 1.15 * inch
+    c.setStrokeColor(RULE_COLOR)
+    c.setLineWidth(0.6)
+    c.rect(endorse_left, chk_y, 7, 7, fill=0, stroke=1)
+    c.setFont("Helvetica-Bold", 5.5)
+    c.setFillColor(TEXT_COLOR)
+    c.drawString(endorse_left + 10, chk_y + 1.5, "CHECK HERE IF MOBILE DEPOSIT")
+
+    # Warning text
+    warn_y = h_pt - 1.32 * inch
+    c.setFont("Helvetica-Bold", 4.8)
+    c.setFillColor(colors.HexColor("#64748B"))
+    c.drawCentredString(endorse_left + (endorse_right - endorse_left) / 2, warn_y, "DO NOT WRITE, STAMP OR SIGN BELOW THIS LINE")
+
+    # Financial Institution clear boundary line with Microprint and MP
+    clear_y = h_pt - 1.45 * inch
+    _draw_microprint_line(c, endorse_left, clear_y, endorse_right, clear_y)
+
+    c.setFont("Helvetica-Bold", 4.5)
+    c.setFillColor(colors.HexColor("#475569"))
+    c.drawString(endorse_left, clear_y - 6.5, "MP")
+    c.drawRightString(endorse_right, clear_y - 6.5, "MP")
+    c.drawCentredString(endorse_left + (endorse_right - endorse_left) / 2, clear_y - 6.5, "RESERVED FOR FINANCIAL INSTITUTION USE*")
+
+    # ------------------------------------------------------------------
+    # 3. LEFT: CPSA Security Features Warning Box (Image 3)
+    # ------------------------------------------------------------------
+    box_h = h_pt - 0.36 * inch
+    box_bottom = 0.18 * inch
+    c.setStrokeColor(colors.HexColor("#94A3B8"))
+    c.setLineWidth(0.7)
+    c.setFillColor(colors.white)
+    c.rect(warning_box_x, box_bottom, warning_box_w, box_h, fill=1, stroke=1)
+
+    # Padlock Icon in top-left of warning box
+    padlock_x = warning_box_x + 8
+    padlock_y = box_bottom + box_h - 18
+    _draw_personal_padlock_icon(c, padlock_x, padlock_y, with_text=False)
+
+    # Title
+    c.setFont("Helvetica-Bold", 5.2)
+    c.setFillColor(TEXT_COLOR)
+    c.drawString(warning_box_x + 24, box_bottom + box_h - 12, "Padlock design is a certification mark")
+    c.drawString(warning_box_x + 24, box_bottom + box_h - 18, "of the Check Payment Systems Association")
+
+    # Warning Subtitle
+    c.setFont("Helvetica-Bold", 5.8)
+    c.drawString(warning_box_x + 8, box_bottom + box_h - 30, "Warning:")
+    c.setFont("Helvetica", 4.8)
+    c.setFillColor(colors.HexColor("#475569"))
+    c.drawString(warning_box_x + 8, box_bottom + box_h - 38, "Absence of the following Security Features may indicate alteration")
+
+    # 4 Security Features Bullets
+    items = [
+        ("MP Microprint", "Tiny type on front and back fills solid when scanned or copied."),
+        ("Security Pantograph", "Copy resistant security pantograph discourages duplication."),
+        ("Warning Bands/Padlock", "Warn processors to be aware of detailed security features."),
+        ("Security Screen Backer", "'Original Document' text & weave pattern visible on back."),
+    ]
+    cur_y = box_bottom + box_h - 50
+    for title, desc in items:
+        c.setFont("Helvetica-Bold", 5.0)
+        c.setFillColor(TEXT_COLOR)
+        c.drawString(warning_box_x + 8, cur_y, f"• {title}:")
+        c.setFont("Helvetica", 4.6)
+        c.setFillColor(colors.HexColor("#475569"))
+        c.drawString(warning_box_x + 8, cur_y - 7, desc)
+        cur_y -= 16
+
+    # Federal Reserve Notice at bottom of box
+    c.setFont("Helvetica-Bold", 4.6)
+    c.setFillColor(colors.HexColor("#334155"))
+    c.drawCentredString(warning_box_x + warning_box_w / 2, box_bottom + 5.5, "* FEDERAL RESERVE BOARD OF GOVERNORS REG. CC")
+
+    c.restoreState()
 
 
 # ---------------------------------------------------------------------------

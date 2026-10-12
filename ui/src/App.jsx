@@ -17,12 +17,16 @@ export default function App() {
   // Form State
   const [formData, setFormData] = useState({
     account_id: 'ACC-001',
-    check_number: 39254225,
+    routing_number: '',
+    account_number: '',
+    check_number: 1001,
     payee: 'BRANDON BACH',
+    payee_address: '',
+    payee_city_state_zip: '',
     amount_dollars: 5000.0,
     issue_date: new Date().toISOString().split('T')[0],
-    memo: 'Medical Payments to Others coverage',
-    layout: 'remittance', // 'remittance' or 'standard'
+    memo: 'Consulting Services & Materials',
+    layout: 'personal', // 'personal' (BofA standard), 'business' (BofA spec), 'remittance' (USAA)
     page_format: 'check_only', // 'check_only' or 'voucher_sheet'
     signature_name: 'Minnie Hinds',
     draw_signature: true,
@@ -74,7 +78,17 @@ export default function App() {
   useEffect(() => {
     fetch('/api/accounts')
       .then((res) => res.json())
-      .then((data) => setAccountInfo(data))
+      .then((data) => {
+        setAccountInfo(data);
+        const acct = data.accounts?.[0];
+        if (acct) {
+          setFormData((prev) => ({
+            ...prev,
+            routing_number: prev.routing_number || acct.routing_number || '',
+            account_number: prev.account_number || acct.account_number || '',
+          }));
+        }
+      })
       .catch((err) => console.error('Failed to load accounts:', err));
 
     fetch('/api/templates/remittance')
@@ -127,6 +141,10 @@ export default function App() {
   }, [
     formData.check_number,
     formData.payee,
+    formData.payee_address,
+    formData.payee_city_state_zip,
+    formData.routing_number,
+    formData.account_number,
     formData.amount_dollars,
     formData.issue_date,
     formData.memo,
