@@ -120,9 +120,9 @@ def _register_e13b_font() -> str:
 # Geometry constants (in inches, converted to points below)
 # ---------------------------------------------------------------------------
 
-# Personal check dimensions: 6.0" wide by 2 3/5" (2.60") tall
+# Personal check dimensions: 6.0" wide by 2 3/4" (2.75") tall per Bank of America Spec Page 3
 PERSONAL_WIDTH_IN  = 6.0
-PERSONAL_HEIGHT_IN = 2.60  # Exactly 2 3/5 inch
+PERSONAL_HEIGHT_IN = 2.75  # Exactly 2 3/4 inch per BofA Engineering Spec
 
 DEFAULT_WIDTH_IN  = 8.5
 DEFAULT_HEIGHT_IN = 3.5
@@ -620,13 +620,21 @@ def _draw_personal_face(
     m = 0.22 * inch
 
     # Background
+    # Outer perimeter & background
     if include_background:
         c.setFillColor(colors.HexColor("#FAFBFD"))
         c.rect(x_offset, y_offset, w_in * inch, h_in * inch, fill=1, stroke=0)
+        # Clear band (bottom 5/8 in = 0.625" high from bottom, pure white for MICR/MBR)
+        c.setFillColor(colors.white)
+        c.rect(x_offset + 1, y_offset + 1, w_in * inch - 2, CLEAR_BAND_HEIGHT_IN * inch - 1, fill=1, stroke=0)
+        # Outer document border
+        c.setStrokeColor(colors.HexColor("#000000"))
+        c.setLineWidth(0.8)
+        c.rect(x_offset, y_offset, w_in * inch, h_in * inch, fill=0, stroke=1)
         # Subtle perimeter security border
         c.setStrokeColor(colors.HexColor("#CBD5E1"))
-        c.setLineWidth(0.6)
-        c.rect(x_offset + 3, y_offset + 3, w_in * inch - 6, h_in * inch - 6, fill=0, stroke=1)
+        c.setLineWidth(0.5)
+        c.rect(x_offset + 2.5, y_offset + 2.5, w_in * inch - 5.0, h_in * inch - 5.0, fill=0, stroke=1)
         # Faint security feature notice along top
         c.setFillColor(LEGEND_COLOR)
         c.setFont("Helvetica", 4.8)
@@ -636,14 +644,15 @@ def _draw_personal_face(
             "SECURITY FEATURES: Chemically reactive paper · Micro-printed border · Absence of features indicates copy",
         )
     else:
+        c.setFillColor(colors.white)
+        c.rect(x_offset + 1, y_offset + 1, w_in * inch - 2, CLEAR_BAND_HEIGHT_IN * inch - 1, fill=1, stroke=0)
         c.setStrokeColor(RULE_COLOR)
-        c.setLineWidth(0.5)
+        c.setLineWidth(0.6)
         c.rect(x_offset, y_offset, w_in * inch, h_in * inch, fill=0, stroke=1)
 
-    # Component 1 (Top-Left): Customer Name & Address
-    top_y = y_offset + h_in * inch
-    drawer_x = x_offset + m
-    drawer_y = top_y - 18.0
+    # Component 1 (Top-Left): Customer Name & Address (0.373 in = 26.9 pt from left)
+    drawer_x = x_offset + 26.9
+    drawer_y = y_offset + 175.0
 
     c.setFillColor(TEXT_COLOR)
     c.setFont("Helvetica-Bold", 9.5)
@@ -658,29 +667,28 @@ def _draw_personal_face(
         drawer_csz = account_config.get("drawer_city_state_zip", "")
 
     c.setFont("Helvetica", 8.0)
-    c.drawString(drawer_x, drawer_y - 10.0, drawer_addr_line)
-    c.drawString(drawer_x, drawer_y - 19.0, drawer_csz)
+    c.drawString(drawer_x, drawer_y - 11.0, drawer_addr_line)
+    c.drawString(drawer_x, drawer_y - 22.0, drawer_csz)
 
     # Component 6 (Far Top-Right): Check Serial Number
-    right_x = x_offset + (w_in * inch) - m
-    c.setFont("Helvetica-Bold", 13.5)
+    right_x = x_offset + 414.0  # 5.75 in from left
+    c.setFont("Helvetica-Bold", 14.0)
     c.setFillColor(TEXT_COLOR)
     serial_str = str(check["serial_number"])
-    c.drawRightString(right_x, drawer_y - 1.5, serial_str)
-    serial_w = c.stringWidth(serial_str, "Helvetica-Bold", 13.5)
+    c.drawRightString(right_x, drawer_y, serial_str)
 
     # Component 7 (To the left of Check No.): Fractional Routing
     frac_rt = account_config.get("fractional_routing", "32-1 / 1110 GL")
     c.setFont("Helvetica", 7.5)
     c.setFillColor(colors.HexColor("#475569"))
-    c.drawRightString(right_x - serial_w - 12, drawer_y - 1.5, frac_rt)
+    c.drawRightString(x_offset + 355.0, drawer_y, frac_rt)
 
-    # Component 8: Date Line (Below Component 6 & 7)
-    date_y = drawer_y - 21.0
-    c.setFont("Helvetica-Bold", 7.5)
+    # Component 8: Date Line (y = 152.7 pt)
+    date_y = y_offset + 152.7
+    c.setFont("Helvetica-Bold", 8.0)
     c.setFillColor(RULE_COLOR)
-    c.drawString(x_offset + (w_in * 0.58) * inch, date_y + 3, "Date")
-    _draw_rule(c, x_offset + (w_in * 0.58 + 0.30) * inch, date_y, right_x, date_y)
+    c.drawString(x_offset + 272.0, date_y + 3, "Date")
+    _draw_rule(c, x_offset + 290.7, date_y, x_offset + 370.7, date_y)
 
     issue_date = check.get("issue_date", "")
     if issue_date:
@@ -694,33 +702,34 @@ def _draw_personal_face(
 
     c.setFont("Helvetica", 8.5)
     c.setFillColor(TEXT_COLOR)
-    c.drawRightString(right_x - 4, date_y + 3, display_date)
+    c.drawRightString(x_offset + 368.0, date_y + 3, display_date)
 
     # Component 2: Pay to the order of (Stacked per BofA spec)
-    payee_y = drawer_y - 42.0
+    payee_y = y_offset + 117.9
     c.setFillColor(TEXT_COLOR)
     c.setFont("Helvetica-Bold", 8.5)
-    c.drawString(drawer_x, payee_y + 4, "Pay to the")
-    c.drawString(drawer_x, payee_y - 4, "order of")
+    c.drawString(drawer_x, payee_y + 9.0, "Pay to the")
+    c.drawString(drawer_x, payee_y - 1.0, "order of")
 
-    payee_start_x = drawer_x + 52
-
-    c.setFont("Helvetica-Bold", 9.5)
-    c.drawString(payee_start_x + 2, payee_y + 2, check.get("payee_name", ""))
+    payee_start_x = drawer_x + 51.1  # 78.0 pt
 
     # Component 9: Courtesy Amount Box
-    box_w = 1.15 * inch
-    box_h = 18.0
-    box_x = right_x - box_w
-    box_y = payee_y - 4
+    box_w = 67.1   # 0.932 in
+    box_h = 23.4   # 0.324 in
+    box_x = x_offset + 317.6
+    box_y = payee_y + 0.6
 
     # Dollar sign preceding the box
     c.setFont("Helvetica-Bold", 11.0)
     c.setFillColor(TEXT_COLOR)
-    c.drawString(box_x - 12, box_y + 4.5, "$")
+    c.drawString(box_x - 11.6, box_y + 3.5, "$")
 
     # Payee underline
     _draw_rule(c, payee_start_x, payee_y, box_x - 16, payee_y)
+
+    # Print payee name
+    c.setFont("Helvetica-Bold", 9.5)
+    c.drawString(payee_start_x + 4, payee_y + 2.5, check.get("payee_name", ""))
 
     # Box 9
     c.setStrokeColor(RULE_COLOR)
@@ -729,7 +738,7 @@ def _draw_personal_face(
 
     # Inside box amount
     c.setFillColor(TEXT_COLOR)
-    c.setFont("Helvetica-Bold", 10.0)
+    c.setFont("Helvetica-Bold", 10.5)
     courtesy = cents_to_courtesy(check["amount_cents"])
     box_courtesy = courtesy.lstrip("$*")
     if not box_courtesy:
@@ -744,27 +753,25 @@ def _draw_personal_face(
         c.setFont("Helvetica", 7.0)
         c.setFillColor(TEXT_COLOR)
         if payee_addr_line1:
-            c.drawString(payee_start_x, payee_y - 9, payee_addr_line1)
+            c.drawString(payee_start_x + 4, payee_y - 9, payee_addr_line1)
         if payee_addr_line2:
-            c.drawString(payee_start_x, payee_y - 17, payee_addr_line2)
+            c.drawString(payee_start_x + 4, payee_y - 17, payee_addr_line2)
         c.restoreState()
 
     # Component 3: Legal Amount Line ending in "Dollars"
-    legal_y = payee_y - (24.0 if (payee_addr_line1 or payee_addr_line2) else 18.0)
+    legal_y = y_offset + 95.2
     c.setFont("Helvetica", 8.5)
     c.setFillColor(TEXT_COLOR)
     legal_text = cents_to_legal(check["amount_cents"], line_width=52)
     c.drawString(drawer_x, legal_y + 3, legal_text)
 
-    dollars_w = c.stringWidth("Dollars", "Helvetica-Bold", 8.0)
-    dollars_x = right_x
-    _draw_rule(c, drawer_x, legal_y, dollars_x - dollars_w - 6, legal_y)
-    c.setFont("Helvetica-Bold", 8.0)
+    _draw_rule(c, drawer_x, legal_y, x_offset + 371.3, legal_y)
+    c.setFont("Helvetica-Bold", 8.5)
     c.setFillColor(RULE_COLOR)
-    c.drawRightString(dollars_x, legal_y + 3, "Dollars")
+    c.drawRightString(right_x, legal_y + 3, "Dollars")
 
     # Component 4: Bank of America Flag Logo, Bank Name, and ACH R/T
-    bank_y = legal_y - 16.0
+    bank_y = y_offset + 74.0
     _draw_bofa_flag_logo(c, drawer_x, bank_y - 2, size=11)
     c.setFont("Helvetica-Bold", 8.5)
     c.setFillColor(TEXT_COLOR)
@@ -776,26 +783,25 @@ def _draw_personal_face(
     c.drawString(drawer_x, bank_y - 8.5, f"ACH R/T {rt}")
 
     # Memo Line and Signature Line:
-    # Positioned at about 6/8" (0.75 in = 54 pt) from the bottom edge,
-    # above the invisible 5/8" clear band line per specification.
-    bottom_ctrl_y = y_offset + (6.0 / 8.0) * inch
+    # Positioned at y = 59.2 pt (0.82 in) from the bottom edge per BofA spec
+    bottom_ctrl_y = y_offset + 59.2
 
     # Memo: 'Memo ________________________'
     c.setFont("Helvetica-Bold", 7.5)
     c.setFillColor(RULE_COLOR)
     c.drawString(drawer_x, bottom_ctrl_y + 3, "Memo")
-    memo_rule_end = x_offset + (w_in * 0.44) * inch
-    _draw_rule(c, drawer_x + 28, bottom_ctrl_y, memo_rule_end, bottom_ctrl_y)
+    memo_rule_end = x_offset + 138.9
+    _draw_rule(c, drawer_x + 30.9, bottom_ctrl_y, memo_rule_end, bottom_ctrl_y)
 
     memo_text = check.get("memo", "")
     if memo_text:
         c.setFont("Helvetica", 8.0)
         c.setFillColor(TEXT_COLOR)
-        c.drawString(drawer_x + 30, bottom_ctrl_y + 3, memo_text[:30])
+        c.drawString(drawer_x + 33, bottom_ctrl_y + 3, memo_text[:30])
 
     # Component 10: Signature Line
-    sig_x_start = x_offset + (w_in * 0.50) * inch
-    sig_x_end = right_x
+    sig_x_start = x_offset + 310.0
+    sig_x_end = x_offset + 420.9
     _draw_microprint_line(c, sig_x_start, bottom_ctrl_y, sig_x_end, bottom_ctrl_y)
 
     if draw_signature:
@@ -804,10 +810,6 @@ def _draw_personal_face(
                                   (sig_x_end - sig_x_start - 8), 22)
         else:
             _draw_script_signature(c, sig_x_start + 8, bottom_ctrl_y + 2)
-
-    # Clear band (bottom 5/8 in = 0.625" high from bottom, pure white for MICR/MBR)
-    c.setFillColor(colors.white)
-    c.rect(x_offset, y_offset, w_in * inch, CLEAR_BAND_HEIGHT_IN * inch, fill=1, stroke=0)
 
     # Personal MICR line
     _draw_micr_line(c, check, bank_config, micr_font, w_in, y_offset=y_offset, x_offset=x_offset)
@@ -906,25 +908,21 @@ def _draw_micr_line(c, check, bank_config, micr_font, w_in, y_offset: float = 0.
     """
     Draw the ANSI X9.100-160-1 / ANSI X9.27 E-13B MICR code line.
     Position 1 is anchored 0.3125 in (5/16 in) from the right (leading) edge.
-    Pitch is standard ANSI 10 CPI (0.100 in = 7.2 pt) with character baseline
+    Pitch is standard ANSI 8 CPI (0.125 in = 9.0 pt) with character baseline
     centered in the 0.625 in clear band.
     """
     code_line = build_code_line(check, bank_config)
 
-    char_w  = 0.100 * inch
-    font_sz = 8.5
+    char_w  = MICR_CHAR_WIDTH_IN * inch  # 0.125 in = 9.0 pt (8 CPI per ANSI X9.27 / X9.100-20)
+    font_sz = MICR_FONT_SIZE_PT         # 9.0 pt
     micr_y  = y_offset + PRINT_BAND_BOTTOM_IN * inch + 3.0
 
     c.setFillColor(colors.black)
 
-    # Position 1 is at 0.3125" from the right edge
-    x_pos1 = x_offset + (w_in - 0.3125) * inch
-
     for i, ch in enumerate(code_line):
         if ch != " ":
-            # Index i (0..64) corresponds to position (65 - i)
-            # Distance from position 1 is (pos - 1) * char_w = (64 - i) * char_w
-            x = x_pos1 - (64 - i) * char_w
+            pos = 65 - i
+            x = x_offset + w_in * inch - (0.3125 * inch + (pos - 1) * char_w)
             _draw_micr_glyph(c, ch, x, micr_y, char_w, micr_font, font_sz)
 
 

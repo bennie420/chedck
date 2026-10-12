@@ -121,7 +121,7 @@ export default function CheckForm({
               >
                 {formData.layout === 'personal' ? (
                   <>
-                    <option value="check_only">Personal Check (6.0" × 2 3/5")</option>
+                    <option value="check_only">Personal Check (6.0" × 2 3/4")</option>
                     <option value="voucher_sheet">Personal Voucher Sheet (8.5" × 11.0")</option>
                   </>
                 ) : formData.layout === 'business' ? (

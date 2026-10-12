@@ -58,7 +58,7 @@ export default function CheckPreview({
             </div>
           )}
           <span className="brand-badge" style={{ borderColor: 'rgba(16, 185, 129, 0.4)', color: '#34d399', background: 'rgba(16, 185, 129, 0.1)' }}>
-            {isLoading ? 'RENDERING...' : previewData?.layout === 'personal' ? 'BOFA PERSONAL (6" × 2 3/5")' : previewData?.layout === 'business' ? 'BOFA BUSINESS (8.5" × 3.5")' : 'USAA REMITTANCE'}
+            {isLoading ? 'RENDERING...' : previewData?.layout === 'personal' ? 'BOFA PERSONAL (6" × 2 3/4")' : previewData?.layout === 'business' ? 'BOFA BUSINESS (8.5" × 3.5")' : 'USAA REMITTANCE'}
           </span>
         </div>
       </div>

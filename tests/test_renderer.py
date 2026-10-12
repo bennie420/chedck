@@ -178,7 +178,7 @@ class TestRenderCheck:
         assert pdf_path.stat().st_size > 0
 
     def test_render_personal_check_dimensions(self, tmp_path):
-        """Verify personal check page dimensions are exactly 6.0 x 2 3/5 inches (432 x 187.2 pt)."""
+        """Verify personal check page dimensions are exactly 6.0 x 2 3/4 inches (432 x 198.0 pt)."""
         pdf_path = tmp_path / "personal_check.pdf"
         personal_check = {
             **SAMPLE_CHECK,
@@ -188,7 +188,7 @@ class TestRenderCheck:
         assert result.exists()
         w_pt, h_pt = _read_pdf_pagesize(pdf_path)
         expected_w = 6.0 * 72  # = 432.0
-        expected_h = 2.60 * 72  # = 187.2 (2 3/5 in)
+        expected_h = 2.75 * 72  # = 198.0 (2 3/4 in per BofA Engineering Spec)
         assert abs(w_pt - expected_w) < 0.1
         assert abs(h_pt - expected_h) < 0.1
 
