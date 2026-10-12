@@ -224,6 +224,109 @@ export default function CheckForm({
           />
         </div>
 
+        {formData.layout === 'standard' && (
+          <div className="form-section">
+            <label className="section-label">Standard Check Banking & Drawer Overrides (Optional)</label>
+
+            <div className="input-row" style={{ marginBottom: '0.75rem' }}>
+              <div className="input-group" style={{ flex: 1 }}>
+                <label className="input-label">Routing Number (ABA)</label>
+                <input
+                  type="text"
+                  className="input-field"
+                  placeholder="Optional: 9 digits"
+                  maxLength={9}
+                  inputMode="numeric"
+                  value={formData.routing_number || ''}
+                  onChange={(e) => handleChange('routing_number', e.target.value.replace(/\D/g, ''))}
+                />
+              </div>
+              <div className="input-group" style={{ flex: 1 }}>
+                <label className="input-label">Account Number</label>
+                <input
+                  type="text"
+                  className="input-field"
+                  placeholder="Optional: digits only"
+                  inputMode="numeric"
+                  value={formData.account_number || ''}
+                  onChange={(e) => handleChange('account_number', e.target.value.replace(/\D/g, ''))}
+                />
+              </div>
+            </div>
+
+            <div className="input-group" style={{ marginBottom: '0.75rem' }}>
+              <label className="input-label">Drawer Name (optional override)</label>
+              <input
+                type="text"
+                className="input-field"
+                placeholder="Optional drawer name override"
+                value={formData.drawer_name || ''}
+                onChange={(e) => handleChange('drawer_name', e.target.value)}
+              />
+            </div>
+
+            <div className="input-row" style={{ marginBottom: '0.75rem' }}>
+              <div className="input-group" style={{ flex: 1 }}>
+                <label className="input-label">Address Line 1 (optional)</label>
+                <input
+                  type="text"
+                  className="input-field"
+                  value={formData.drawer_address_line1 || ''}
+                  onChange={(e) => handleChange('drawer_address_line1', e.target.value)}
+                />
+              </div>
+              <div className="input-group" style={{ flex: 1 }}>
+                <label className="input-label">Address Line 2 (optional)</label>
+                <input
+                  type="text"
+                  className="input-field"
+                  value={formData.drawer_address_line2 || ''}
+                  onChange={(e) => handleChange('drawer_address_line2', e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="input-row">
+              <div className="input-group" style={{ flex: 1 }}>
+                <label className="input-label">City (optional)</label>
+                <input
+                  type="text"
+                  className="input-field"
+                  value={formData.drawer_city || ''}
+                  onChange={(e) => handleChange('drawer_city', e.target.value)}
+                />
+              </div>
+              <div className="input-group" style={{ flex: 1 }}>
+                <label className="input-label">State / Province (optional)</label>
+                <input
+                  type="text"
+                  className="input-field"
+                  value={formData.drawer_state_province || ''}
+                  onChange={(e) => handleChange('drawer_state_province', e.target.value)}
+                />
+              </div>
+              <div className="input-group" style={{ flex: 1 }}>
+                <label className="input-label">Postal Code (optional)</label>
+                <input
+                  type="text"
+                  className="input-field"
+                  value={formData.drawer_postal_code || ''}
+                  onChange={(e) => handleChange('drawer_postal_code', e.target.value)}
+                />
+              </div>
+              <div className="input-group" style={{ flex: 1 }}>
+                <label className="input-label">Country (optional)</label>
+                <input
+                  type="text"
+                  className="input-field"
+                  value={formData.drawer_country || ''}
+                  onChange={(e) => handleChange('drawer_country', e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Remittance Claim Metadata (if remittance layout) */}
         {formData.layout === 'remittance' && (
           <div className="form-section">

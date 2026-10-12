@@ -17,6 +17,38 @@ import re
 # Routing number
 # ---------------------------------------------------------------------------
 
+def normalize_numeric_identifier(value: str, field_name: str) -> str:
+    """
+    Normalize user-supplied numeric identifiers consistently.
+
+    Behavior:
+      - Leading/trailing whitespace is stripped.
+      - Internal whitespace or non-digit characters are rejected.
+    """
+    if not isinstance(value, str):
+        raise ValueError(f"{field_name} must be a string")
+
+    normalized = value.strip()
+    if not normalized:
+        raise ValueError(f"{field_name} must not be empty")
+
+    if not re.fullmatch(r"\d+", normalized):
+        raise ValueError(f"{field_name} must contain only digits")
+
+    return normalized
+
+
+def mask_sensitive_number(value: str, keep_last: int = 4) -> str:
+    """Mask a sensitive numeric string for logs/UI."""
+    if not isinstance(value, str) or not value:
+        return ""
+    if keep_last <= 0:
+        return "*" * len(value)
+    if len(value) <= keep_last:
+        return "*" * len(value)
+    return "*" * (len(value) - keep_last) + value[-keep_last:]
+
+
 def validate_routing_number(routing: str) -> bool:
     """
     Validate a 9-digit ABA routing/transit number using the mod-10 formula
@@ -26,15 +58,10 @@ def validate_routing_number(routing: str) -> bool:
 
     Raises ValueError on any failure; returns True on success.
     """
-    if not isinstance(routing, str):
-        raise ValueError(f"Routing number must be a string, got {type(routing).__name__}")
-
-    routing = routing.strip()
+    routing = normalize_numeric_identifier(routing, "Routing number")
 
     if not re.fullmatch(r"\d{9}", routing):
-        raise ValueError(
-            f"Routing number must be exactly 9 digits, got: {routing!r}"
-        )
+        raise ValueError("Routing number must be exactly 9 digits")
 
     d = [int(c) for c in routing]
     checksum = (
@@ -43,10 +70,7 @@ def validate_routing_number(routing: str) -> bool:
         + 1 * (d[2] + d[5] + d[8])
     )
     if checksum % 10 != 0:
-        raise ValueError(
-            f"Routing number {routing!r} fails the mod-10 check digit test "
-            f"(checksum={checksum}, remainder={checksum % 10})"
-        )
+        raise ValueError("Routing number fails the ABA mod-10 check digit test")
 
     # All-zeros is technically valid mod-10 but is not a real routing number.
     if routing == "000000000":
@@ -69,29 +93,17 @@ def validate_account_number(account: str, bank_config: dict) -> bool:
 
     Raises ValueError on failure; returns True on success.
     """
-    if not isinstance(account, str):
-        raise ValueError(f"Account number must be a string, got {type(account).__name__}")
-
-    account = account.strip()
-
-    if not account:
-        raise ValueError("Account number must not be empty")
-
-    if not re.fullmatch(r"\d+", account):
-        raise ValueError(
-            f"Account number must contain only digits, got: {account!r}"
-        )
+    account = normalize_numeric_identifier(account, "Account number")
 
     on_us = bank_config.get("micr_fields", {}).get("on_us_field", {})
     start = on_us.get("start", 14)
     end = on_us.get("end", 31)
-    max_len = end - start + 1  # e.g. 31-14+1 = 18
+    field_len = end - start + 1  # e.g. 31-14+1 = 18
+    uses_left_delimiter = on_us.get("left_delimiter", True)
+    max_len = field_len - 1 if uses_left_delimiter else field_len
 
     if len(account) > max_len:
-        raise ValueError(
-            f"Account number {account!r} is {len(account)} digits but the "
-            f"On-Us field (positions {start}-{end}) allows at most {max_len} digits"
-        )
+        raise ValueError("Account number exceeds the configured On-Us field width")
 
     if account == "0" * len(account):
         raise ValueError(

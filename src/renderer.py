@@ -267,6 +267,62 @@ def render_check(
 # Face rendering
 # ---------------------------------------------------------------------------
 
+def resolve_drawer_address_lines(account_config: dict) -> tuple[str, str]:
+    """
+    Resolve drawer address lines with support for optional structured fields.
+
+    Structured fields (preferred, optional):
+      - drawer_address_line1, drawer_address_line2
+      - drawer_city, drawer_state_province, drawer_postal_code, drawer_country
+
+    Legacy fields (fallback):
+      - drawer_address
+      - drawer_city_state_zip
+    """
+    line1 = str(account_config.get("drawer_address_line1") or "").strip()
+    line2_extra = str(account_config.get("drawer_address_line2") or "").strip()
+    city = str(account_config.get("drawer_city") or "").strip()
+    state = str(account_config.get("drawer_state_province") or "").strip()
+    postal = str(account_config.get("drawer_postal_code") or "").strip()
+    country = str(account_config.get("drawer_country") or "").strip()
+
+    if line1 and line2_extra:
+        line1 = f"{line1}, {line2_extra}"
+    elif not line1 and line2_extra:
+        line1 = line2_extra
+
+    city_state = ", ".join(part for part in [city, state] if part)
+    locality_parts = []
+    if city_state and postal:
+        locality_parts.append(f"{city_state} {postal}")
+    elif city_state:
+        locality_parts.append(city_state)
+    elif postal:
+        locality_parts.append(postal)
+    if country:
+        locality_parts.append(country)
+    line2 = " · ".join(locality_parts)
+
+    if not line1 or not line2:
+        drawer_addr = account_config.get("drawer_address", "")
+        if isinstance(drawer_addr, list):
+            if not line1:
+                line1 = str(drawer_addr[0]).strip() if len(drawer_addr) > 0 else ""
+            if not line2:
+                line2 = (
+                    str(drawer_addr[1]).strip()
+                    if len(drawer_addr) > 1
+                    else str(account_config.get("drawer_city_state_zip", "")).strip()
+                )
+        else:
+            if not line1:
+                line1 = str(drawer_addr).strip()
+            if not line2:
+                line2 = str(account_config.get("drawer_city_state_zip", "")).strip()
+
+    return line1, line2
+
+
 def _draw_face(
     c, check, bank_config, account_config, micr_font, w_in, h_in,
     draw_signature: bool = False, signature_image_bytes: bytes | None = None, y_offset: float = 0.0,
@@ -297,13 +353,7 @@ def _draw_face(
     c.setFont("Helvetica-Bold", 10)
     c.drawString(drawer_x, drawer_y, account_config.get("drawer_name", ""))
 
-    drawer_addr = account_config.get("drawer_address", "")
-    if isinstance(drawer_addr, list):
-        drawer_addr_line = drawer_addr[0] if len(drawer_addr) > 0 else ""
-        drawer_csz = drawer_addr[1] if len(drawer_addr) > 1 else account_config.get("drawer_city_state_zip", "")
-    else:
-        drawer_addr_line = str(drawer_addr)
-        drawer_csz = account_config.get("drawer_city_state_zip", "")
+    drawer_addr_line, drawer_csz = resolve_drawer_address_lines(account_config)
 
     c.setFont("Helvetica", 9)
     c.drawString(drawer_x, drawer_y - 12, drawer_addr_line)
@@ -795,13 +845,7 @@ def _draw_remittance_face(
     c.setFont("Helvetica-Bold", 7.5)
     c.drawString(drawer_x, box_center_y + 6.8, account_config.get("drawer_name", "USAA"))
     c.setFont("Helvetica", 6.8)
-    drawer_addr = account_config.get("drawer_address", "9800 Fredericksburg Rd")
-    if isinstance(drawer_addr, list):
-        drawer_addr_line = drawer_addr[0] if len(drawer_addr) > 0 else ""
-        drawer_csz = drawer_addr[1] if len(drawer_addr) > 1 else account_config.get("drawer_city_state_zip", "San Antonio TX 78288")
-    else:
-        drawer_addr_line = str(drawer_addr)
-        drawer_csz = account_config.get("drawer_city_state_zip", "San Antonio TX 78288")
+    drawer_addr_line, drawer_csz = resolve_drawer_address_lines(account_config)
 
     c.drawString(drawer_x, box_center_y - 2.7, drawer_addr_line)
     c.drawString(drawer_x, box_center_y - 12.2, drawer_csz)
@@ -1010,8 +1054,9 @@ def _draw_voucher_stub(c, check, bank_config, account_config, remittance_data, w
 
     c.setFont("Helvetica", 9)
     c.setFillColor(colors.HexColor("#4A5568"))
-    c.drawString(m, header_y - 14, account_config.get("drawer_address", ""))
-    c.drawString(m, header_y - 26, account_config.get("drawer_city_state_zip", ""))
+    drawer_addr_line, drawer_csz = resolve_drawer_address_lines(account_config)
+    c.drawString(m, header_y - 14, drawer_addr_line)
+    c.drawString(m, header_y - 26, drawer_csz)
 
     c.setFont("Helvetica-Bold", 13)
     c.setFillColor(colors.HexColor("#2B6CB0"))

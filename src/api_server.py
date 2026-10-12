@@ -64,6 +64,49 @@ DB_DIR.mkdir(parents=True, exist_ok=True)
 app.mount("/api/output", StaticFiles(directory=str(OUTPUT_DIR)), name="output")
 
 
+ACCOUNT_OVERRIDE_FIELDS = {
+    "routing_number",
+    "account_number",
+    "drawer_name",
+    "drawer_address",
+    "drawer_city_state_zip",
+    "drawer_address_line1",
+    "drawer_address_line2",
+    "drawer_city",
+    "drawer_state_province",
+    "drawer_postal_code",
+    "drawer_country",
+    "fractional_routing",
+}
+
+BANK_OVERRIDE_FIELDS = {
+    "bank_name",
+    "bank_city_state",
+}
+
+
+def _apply_account_bank_overrides(account_cfg: dict, bank_cfg: dict, overrides: Optional[Dict[str, Any]]) -> None:
+    if not overrides:
+        return
+    for key, value in overrides.items():
+        if value is None:
+            continue
+        if key in ACCOUNT_OVERRIDE_FIELDS:
+            account_cfg[key] = value
+        if key in BANK_OVERRIDE_FIELDS:
+            bank_cfg[key] = value
+
+
+def _build_request_overrides(req: Any) -> dict:
+    overrides = {}
+    for field in ACCOUNT_OVERRIDE_FIELDS | BANK_OVERRIDE_FIELDS:
+        if hasattr(req, field):
+            value = getattr(req, field)
+            if value is not None:
+                overrides[field] = value
+    return overrides
+
+
 # ---------------------------------------------------------------------------
 # Pydantic Request Models
 # ---------------------------------------------------------------------------
@@ -111,6 +154,18 @@ class PreviewRequest(BaseModel):
     draw_signature: bool = True
     remittance_data: Optional[Dict[str, Any]] = None
     outline_only: bool = False
+    routing_number: Optional[str] = None
+    account_number: Optional[str] = None
+    drawer_name: Optional[str] = None
+    drawer_address: Optional[str] = None
+    drawer_city_state_zip: Optional[str] = None
+    drawer_address_line1: Optional[str] = None
+    drawer_address_line2: Optional[str] = None
+    drawer_city: Optional[str] = None
+    drawer_state_province: Optional[str] = None
+    drawer_postal_code: Optional[str] = None
+    drawer_country: Optional[str] = None
+    fractional_routing: Optional[str] = None
 
 
 class PrintRequest(BaseModel):
@@ -128,6 +183,18 @@ class PrintRequest(BaseModel):
     signature_name: Optional[str] = None
     remittance_data: Optional[Dict[str, Any]] = None
     outline_only: bool = False
+    routing_number: Optional[str] = None
+    account_number: Optional[str] = None
+    drawer_name: Optional[str] = None
+    drawer_address: Optional[str] = None
+    drawer_city_state_zip: Optional[str] = None
+    drawer_address_line1: Optional[str] = None
+    drawer_address_line2: Optional[str] = None
+    drawer_city: Optional[str] = None
+    drawer_state_province: Optional[str] = None
+    drawer_postal_code: Optional[str] = None
+    drawer_country: Optional[str] = None
+    fractional_routing: Optional[str] = None
 
 
 class VoidRequest(BaseModel):
@@ -164,8 +231,20 @@ def get_accounts():
                 "drawer_name": acct_cfg.get("drawer_name", "Acme Corporation"),
                 "drawer_address": acct_cfg.get("drawer_address", "100 Enterprise Way"),
                 "drawer_city_state_zip": acct_cfg.get("drawer_city_state_zip", "Austin, TX 78701"),
+                "drawer_address_line1": acct_cfg.get("drawer_address_line1"),
+                "drawer_address_line2": acct_cfg.get("drawer_address_line2"),
+                "drawer_city": acct_cfg.get("drawer_city"),
+                "drawer_state_province": acct_cfg.get("drawer_state_province"),
+                "drawer_postal_code": acct_cfg.get("drawer_postal_code"),
+                "drawer_country": acct_cfg.get("drawer_country"),
                 "routing_number": acct_cfg.get("routing_number", "053000196"),
                 "account_number": acct_cfg.get("account_number", "123456789012"),
+                "routing_number_masked": validation.mask_sensitive_number(
+                    str(acct_cfg.get("routing_number", "053000196"))
+                ),
+                "account_number_masked": validation.mask_sensitive_number(
+                    str(acct_cfg.get("account_number", "123456789012"))
+                ),
                 "fractional_routing": acct_cfg.get("fractional_routing", "68-19/530"),
             }
         ],
@@ -180,8 +259,14 @@ def get_remittance_template():
 
 class AccountConfigUpdate(BaseModel):
     drawer_name: str
-    drawer_address: str
-    drawer_city_state_zip: str
+    drawer_address: Optional[str] = ""
+    drawer_city_state_zip: Optional[str] = ""
+    drawer_address_line1: Optional[str] = None
+    drawer_address_line2: Optional[str] = None
+    drawer_city: Optional[str] = None
+    drawer_state_province: Optional[str] = None
+    drawer_postal_code: Optional[str] = None
+    drawer_country: Optional[str] = None
     account_number: str
     routing_number: str
     fractional_routing: str
@@ -194,14 +279,16 @@ def update_account_config(req: AccountConfigUpdate):
 
     # Validate routing number
     try:
-        v.validate_routing_number(req.routing_number)
+        normalized_routing = v.normalize_numeric_identifier(req.routing_number, "Routing number")
+        v.validate_routing_number(normalized_routing)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=f"Routing number invalid: {e}")
 
     # Validate account number (pass bank_config for max-width from bank spec)
     bank_cfg_for_validation = load_config("bank_config.json")
     try:
-        v.validate_account_number(req.account_number, bank_cfg_for_validation)
+        normalized_account = v.normalize_numeric_identifier(req.account_number, "Account number")
+        v.validate_account_number(normalized_account, bank_cfg_for_validation)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=f"Account number invalid: {e}")
 
@@ -209,12 +296,30 @@ def update_account_config(req: AccountConfigUpdate):
     cfg_path = CONFIG_DIR / "account_config.json"
     existing = json.loads(cfg_path.read_text()) if cfg_path.exists() else {}
 
+    city = (req.drawer_city or "").strip()
+    state = (req.drawer_state_province or "").strip()
+    postal = (req.drawer_postal_code or "").strip()
+    country = (req.drawer_country or "").strip()
+    city_state = ", ".join(part for part in [city, state] if part)
+    if city_state and postal:
+        city_state_zip = f"{city_state} {postal}"
+    else:
+        city_state_zip = city_state or postal
+    if country:
+        city_state_zip = f"{city_state_zip} · {country}" if city_state_zip else country
+
     existing.update({
         "drawer_name": req.drawer_name,
-        "drawer_address": req.drawer_address,
-        "drawer_city_state_zip": req.drawer_city_state_zip,
-        "account_number": req.account_number,
-        "routing_number": req.routing_number,
+        "drawer_address": req.drawer_address_line1 or req.drawer_address or "",
+        "drawer_city_state_zip": city_state_zip or req.drawer_city_state_zip or "",
+        "drawer_address_line1": req.drawer_address_line1,
+        "drawer_address_line2": req.drawer_address_line2,
+        "drawer_city": req.drawer_city,
+        "drawer_state_province": req.drawer_state_province,
+        "drawer_postal_code": req.drawer_postal_code,
+        "drawer_country": req.drawer_country,
+        "account_number": normalized_account,
+        "routing_number": normalized_routing,
         "fractional_routing": req.fractional_routing,
     })
 
@@ -223,8 +328,8 @@ def update_account_config(req: AccountConfigUpdate):
     return {
         "success": True,
         "message": "Account configuration updated successfully.",
-        "routing_number": req.routing_number,
-        "account_number": req.account_number,
+        "routing_number_masked": v.mask_sensitive_number(normalized_routing),
+        "account_number_masked": v.mask_sensitive_number(normalized_account),
     }
 
 
@@ -268,7 +373,7 @@ def get_checks(limit: int = 50):
         checks.append({
             "serial_number": serial,
             "account_id": r["account_id"],
-            "routing_number": r["routing_number"],
+            "routing_number_masked": validation.mask_sensitive_number(str(r["routing_number"] or "")),
             "payee_name": r["payee_name"],
             "amount_cents": r["amount_cents"],
             "amount_formatted": f"${r['amount_cents'] / 100:,.2f}",
@@ -314,24 +419,18 @@ def preview_check(req: PreviewRequest):
     remittance_data = req.remittance_data
     if req.layout == "remittance" and not remittance_data:
         remittance_data = load_config("remittance_template.json")
+    request_overrides = _build_request_overrides(req)
+    if request_overrides:
+        remittance_data = {**(remittance_data or {}), **request_overrides}
 
-    if req.layout == "remittance" and remittance_data:
-        if "routing_number" in remittance_data:
-            account_cfg["routing_number"] = remittance_data["routing_number"]
-        if "account_number" in remittance_data:
-            account_cfg["account_number"] = remittance_data["account_number"]
-        if "drawer_name" in remittance_data:
-            account_cfg["drawer_name"] = remittance_data["drawer_name"]
-        if "drawer_address" in remittance_data:
-            account_cfg["drawer_address"] = remittance_data["drawer_address"]
-        if "drawer_city_state_zip" in remittance_data:
-            account_cfg["drawer_city_state_zip"] = remittance_data["drawer_city_state_zip"]
-        if "fractional_routing" in remittance_data:
-            account_cfg["fractional_routing"] = remittance_data["fractional_routing"]
-        if "bank_name" in remittance_data:
-            bank_cfg["bank_name"] = remittance_data["bank_name"]
-        if "bank_city_state" in remittance_data:
-            bank_cfg["bank_city_state"] = remittance_data["bank_city_state"]
+    _apply_account_bank_overrides(account_cfg, bank_cfg, remittance_data)
+    _apply_account_bank_overrides(account_cfg, bank_cfg, _build_request_overrides(req))
+
+    try:
+        validation.validate_routing_number(str(account_cfg.get("routing_number", "")))
+        validation.validate_account_number(str(account_cfg.get("account_number", "")), bank_cfg)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
     checks_db_path = DB_DIR / "checks.db"
     if not checks_db_path.exists():
@@ -403,14 +502,13 @@ def preview_check(req: PreviewRequest):
             courtesy_text = amounts.cents_to_courtesy(amount_cents)
 
         # Compute dynamic MICR display string
-        if req.layout == "remittance":
-            routing_str = remittance_data.get("routing_number", account_cfg.get("routing_number", "011900445"))
-            account_str = remittance_data.get("account_number", account_cfg.get("account_number", "007740015665"))
-            micr_display = f"O{serial_str}O T{routing_str}T {account_str}O"
-        else:
-            routing_str = account_cfg.get("routing_number", "053000196")
-            account_str = account_cfg.get("account_number", "123456789012")
-            micr_display = f"O{serial_str}O T{routing_str}T {account_str}O"
+        routing_str = str(account_cfg.get("routing_number", "053000196"))
+        account_str = str(account_cfg.get("account_number", "123456789012"))
+        micr_display = (
+            f"O{serial_str}O "
+            f"T{validation.mask_sensitive_number(routing_str)}T "
+            f"{validation.mask_sensitive_number(account_str)}O"
+        )
 
         return {
             "image_data_url": f"data:image/png;base64,{b64_img}",
@@ -526,5 +624,3 @@ class SPAStaticFiles(StaticFiles):
 UI_DIST_DIR = PROJECT_ROOT / "ui" / "dist"
 if UI_DIST_DIR.is_dir() and (UI_DIST_DIR / "index.html").exists():
     app.mount("/", SPAStaticFiles(directory=str(UI_DIST_DIR), html=True), name="static_ui")
-
-
