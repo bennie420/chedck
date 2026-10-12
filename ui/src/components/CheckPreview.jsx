@@ -149,6 +149,7 @@ export default function CheckPreview({
               <div style={{ fontSize: '0.82rem', color: 'var(--text-primary)' }}>
                 Trailing Edge: <strong>Payee Endorsement on RIGHT</strong> (Mobile Deposit Box & Microprint) · Middle: <strong>Bank Zone</strong> · Left: <strong>CPSA Security Box</strong>
               </div>
+            </div>
             <div style={{ textAlign: 'right' }}>
               <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '4px' }}>
                 Reg CC Compliance
