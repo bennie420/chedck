@@ -90,11 +90,19 @@ def validate_startup_config(
     Logs a STARTUP audit event.
     """
     # Routing number
-    rt = account_cfg.get("routing_number", "")
+    rt = validation.normalize_numeric_identifier(
+        account_cfg.get("routing_number", ""),
+        "Routing number",
+    )
+    account_cfg["routing_number"] = rt
     validation.validate_routing_number(rt)
 
     # Account number
-    acct = account_cfg.get("account_number", "")
+    acct = validation.normalize_numeric_identifier(
+        account_cfg.get("account_number", ""),
+        "Account number",
+    )
+    account_cfg["account_number"] = acct
     validation.validate_account_number(acct, bank_cfg)
 
     # Fractional routing
@@ -112,7 +120,7 @@ def validate_startup_config(
         "STARTUP",
         operator_id,
         production_mode=prod_lock,
-        routing_number=rt,
+        routing_number_masked=validation.mask_sensitive_number(rt),
         account_id=account_cfg.get("account_id"),
     )
 
@@ -156,7 +164,7 @@ def run_pipeline(
     account_cfg  = load_config("account_config.json")
     security_cfg = load_config("security_config.json")
 
-    # If remittance_data supplies routing/account overrides (e.g. USAA template), apply them
+    # Apply optional caller-provided overrides (routing/account/address/bank fields).
     if remittance_data:
         if "routing_number" in remittance_data:
             account_cfg["routing_number"] = remittance_data["routing_number"]
@@ -168,6 +176,18 @@ def run_pipeline(
             account_cfg["drawer_address"] = remittance_data["drawer_address"]
         if "drawer_city_state_zip" in remittance_data:
             account_cfg["drawer_city_state_zip"] = remittance_data["drawer_city_state_zip"]
+        if "drawer_address_line1" in remittance_data:
+            account_cfg["drawer_address_line1"] = remittance_data["drawer_address_line1"]
+        if "drawer_address_line2" in remittance_data:
+            account_cfg["drawer_address_line2"] = remittance_data["drawer_address_line2"]
+        if "drawer_city" in remittance_data:
+            account_cfg["drawer_city"] = remittance_data["drawer_city"]
+        if "drawer_state_province" in remittance_data:
+            account_cfg["drawer_state_province"] = remittance_data["drawer_state_province"]
+        if "drawer_postal_code" in remittance_data:
+            account_cfg["drawer_postal_code"] = remittance_data["drawer_postal_code"]
+        if "drawer_country" in remittance_data:
+            account_cfg["drawer_country"] = remittance_data["drawer_country"]
         if "fractional_routing" in remittance_data:
             account_cfg["fractional_routing"] = remittance_data["fractional_routing"]
         if "bank_name" in remittance_data:

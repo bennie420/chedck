@@ -28,6 +28,16 @@ export default function App() {
     draw_signature: true,
     remittance_data: null,
     outline_only: false,
+    routing_number: '',
+    account_number: '',
+    drawer_name: '',
+    drawer_address_line1: '',
+    drawer_address_line2: '',
+    drawer_city: '',
+    drawer_state_province: '',
+    drawer_postal_code: '',
+    drawer_country: '',
+    fractional_routing: '',
   });
 
   // Next sequential serial from DB
@@ -125,6 +135,16 @@ export default function App() {
     formData.signature_name,
     formData.remittance_data,
     formData.outline_only,
+    formData.routing_number,
+    formData.account_number,
+    formData.drawer_name,
+    formData.drawer_address_line1,
+    formData.drawer_address_line2,
+    formData.drawer_city,
+    formData.drawer_state_province,
+    formData.drawer_postal_code,
+    formData.drawer_country,
+    formData.fractional_routing,
   ]);
 
   // 4. Print Check Execution

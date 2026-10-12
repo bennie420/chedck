@@ -92,9 +92,9 @@ export default function CheckPreview({
               {previewData?.micr_display ? (
                 <span>{previewData.micr_display}</span>
               ) : previewData?.layout === 'remittance' ? (
-                <span>O0039254225O T011900445T 007740015665O</span>
+                <span>O0039254225O T*****0445T ********5665O</span>
               ) : (
-                <span>T053000196T 123456789012O 001004</span>
+                <span>T*****0196T ********9012O 001004</span>
               )}
             </div>
           </div>

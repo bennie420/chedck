@@ -7,6 +7,12 @@ export default function SettingsModal({ onClose, accountInfo, onSaved }) {
     drawer_name: acct.drawer_name || '',
     drawer_address: acct.drawer_address || '',
     drawer_city_state_zip: acct.drawer_city_state_zip || '',
+    drawer_address_line1: acct.drawer_address_line1 || acct.drawer_address || '',
+    drawer_address_line2: acct.drawer_address_line2 || '',
+    drawer_city: acct.drawer_city || '',
+    drawer_state_province: acct.drawer_state_province || '',
+    drawer_postal_code: acct.drawer_postal_code || '',
+    drawer_country: acct.drawer_country || '',
     routing_number: acct.routing_number || '',
     account_number: acct.account_number || '',
     fractional_routing: acct.fractional_routing || '',
@@ -104,21 +110,59 @@ export default function SettingsModal({ onClose, accountInfo, onSaved }) {
 
           <div className="settings-field-row">
             <div className="input-group" style={{ flex: 1 }}>
-              <label className="input-label">Street Address</label>
+              <label className="input-label">Address Line 1 (optional)</label>
               <input
                 className="input-field"
                 placeholder="123 Main Street"
-                value={form.drawer_address}
-                onChange={(e) => handleChange('drawer_address', e.target.value)}
+                value={form.drawer_address_line1}
+                onChange={(e) => handleChange('drawer_address_line1', e.target.value)}
               />
             </div>
             <div className="input-group" style={{ flex: 1 }}>
-              <label className="input-label">City, State ZIP</label>
+              <label className="input-label">Address Line 2 (optional)</label>
               <input
                 className="input-field"
-                placeholder="Phoenix, AZ 85001"
-                value={form.drawer_city_state_zip}
-                onChange={(e) => handleChange('drawer_city_state_zip', e.target.value)}
+                placeholder="Suite / Unit / Attention"
+                value={form.drawer_address_line2}
+                onChange={(e) => handleChange('drawer_address_line2', e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="settings-field-row">
+            <div className="input-group" style={{ flex: 1 }}>
+              <label className="input-label">City (optional)</label>
+              <input
+                className="input-field"
+                value={form.drawer_city}
+                onChange={(e) => handleChange('drawer_city', e.target.value)}
+              />
+            </div>
+            <div className="input-group" style={{ flex: 1 }}>
+              <label className="input-label">State / Province (optional)</label>
+              <input
+                className="input-field"
+                value={form.drawer_state_province}
+                onChange={(e) => handleChange('drawer_state_province', e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="settings-field-row">
+            <div className="input-group" style={{ flex: 1 }}>
+              <label className="input-label">Postal Code (optional)</label>
+              <input
+                className="input-field"
+                value={form.drawer_postal_code}
+                onChange={(e) => handleChange('drawer_postal_code', e.target.value)}
+              />
+            </div>
+            <div className="input-group" style={{ flex: 1 }}>
+              <label className="input-label">Country (optional)</label>
+              <input
+                className="input-field"
+                value={form.drawer_country}
+                onChange={(e) => handleChange('drawer_country', e.target.value)}
               />
             </div>
           </div>

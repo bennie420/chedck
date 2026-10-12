@@ -18,6 +18,7 @@ from validation import (
     validate_payee_name,
     validate_serial_number,
     validate_fractional_routing,
+    mask_sensitive_number,
 )
 
 
@@ -89,17 +90,25 @@ class TestAccountNumber:
             "on_us_field": {"start": 14, "end": 31}
         }
     }
+    BANK_CONFIG_NO_LEFT_DELIM = {
+        "micr_fields": {
+            "on_us_field": {"start": 14, "end": 31, "left_delimiter": False}
+        }
+    }
 
     def test_valid_account(self):
         assert validate_account_number("123456789", self.BANK_CONFIG) is True
 
     def test_max_length_accepted(self):
-        # On-Us field 14-31 = 18 positions; position 14 = On-Us symbol → 17 digits max
-        # Our validator checks: field len = 31-14+1 = 18.
-        assert validate_account_number("1" * 18, self.BANK_CONFIG) is True
+        # Default standard layout uses the left On-Us delimiter at position 14.
+        # That leaves 17 numeric positions in 14-31.
+        assert validate_account_number("1" * 17, self.BANK_CONFIG) is True
+
+    def test_max_length_without_left_delimiter(self):
+        assert validate_account_number("1" * 18, self.BANK_CONFIG_NO_LEFT_DELIM) is True
 
     def test_too_long(self):
-        with pytest.raises(ValueError, match="allows at most"):
+        with pytest.raises(ValueError, match="configured On-Us field width"):
             validate_account_number("1" * 19, self.BANK_CONFIG)
 
     def test_non_digits(self):
@@ -113,6 +122,21 @@ class TestAccountNumber:
     def test_all_zeros_rejected(self):
         with pytest.raises(ValueError, match="actual account number"):
             validate_account_number("000000000", self.BANK_CONFIG)
+
+    def test_whitespace_stripped(self):
+        assert validate_account_number(" 123456789 ", self.BANK_CONFIG) is True
+
+    def test_internal_whitespace_rejected(self):
+        with pytest.raises(ValueError, match="only digits"):
+            validate_account_number("1234 56789", self.BANK_CONFIG)
+
+
+class TestMasking:
+    def test_mask_sensitive_number_default(self):
+        assert mask_sensitive_number("123456789") == "*****6789"
+
+    def test_mask_sensitive_number_short(self):
+        assert mask_sensitive_number("123") == "***"
 
 
 # ---------------------------------------------------------------------------
