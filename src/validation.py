@@ -17,7 +17,7 @@ import re
 # Routing number
 # ---------------------------------------------------------------------------
 
-def normalize_numeric_identifier(value: str, field_name: str) -> str:
+def normalize_numeric_identifier(value: str, field_name: str, exact_digits: int | None = None) -> str:
     """
     Normalize user-supplied numeric identifiers consistently.
 
@@ -32,7 +32,10 @@ def normalize_numeric_identifier(value: str, field_name: str) -> str:
     if not normalized:
         raise ValueError(f"{field_name} must not be empty")
 
-    if not re.fullmatch(r"\d+", normalized):
+    if exact_digits is not None:
+        if not re.fullmatch(rf"\d{{{exact_digits}}}", normalized):
+            raise ValueError(f"{field_name} must be exactly {exact_digits} digits")
+    elif not re.fullmatch(r"\d+", normalized):
         raise ValueError(f"{field_name} must contain only digits")
 
     return normalized
@@ -58,10 +61,7 @@ def validate_routing_number(routing: str) -> bool:
 
     Raises ValueError on any failure; returns True on success.
     """
-    routing = normalize_numeric_identifier(routing, "Routing number")
-
-    if not re.fullmatch(r"\d{9}", routing):
-        raise ValueError("Routing number must be exactly 9 digits")
+    routing = normalize_numeric_identifier(routing, "Routing number", exact_digits=9)
 
     d = [int(c) for c in routing]
     checksum = (
